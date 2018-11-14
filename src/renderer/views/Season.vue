@@ -1,22 +1,29 @@
 <template>
-  <div v-if="loading">Loading...</div>
+  <div>
+    <div class="text-center text-xl mb-2">
+      <span v-text="$store.getters['Show/show'].name"></span> -
+      <span>Season {{ $route.params.season }}</span>
+    </div>
 
-  <div class="mx-2" v-else>
-    <div class="flex flex-wrap -m-2">
+    <div v-if="loading">Loading...</div>
 
-      <div v-for="episode in episodes"
-           :key="episode.episode_number"
-           class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 px-3 mb-4 flex flex-col p-2"
-      >
-        <episode-card
-          :episode="episode"
-          @getTorrents="getTorrents"
-          @getSubtitles="getSubtitles"
-          @toggleWatch="toggleWatch"
-          :torrent="torrentsVuex.find(t => t.episode === episode.episode_number)"
-          :subtitle="subtitles.find(t => t.episode === episode.episode_number)"
-          :watched="watchedEpisodes.includes(episode.episode_number)"
-        ></episode-card>
+    <div class="mx-2" v-else>
+      <div class="flex flex-wrap -m-2">
+
+        <div v-for="episode in episodes"
+             :key="episode.episode_number"
+             class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 px-3 mb-4 flex flex-col p-2"
+        >
+          <episode-card
+            :episode="episode"
+            @getTorrents="getTorrents"
+            @getSubtitles="getSubtitles"
+            @toggleWatch="toggleWatch"
+            :torrent="torrentsVuex.find(t => t.episode === episode.episode_number)"
+            :subtitle="subtitles.find(t => t.episode === episode.episode_number)"
+            :watched="watchedEpisodes.includes(episode.episode_number)"
+          ></episode-card>
+        </div>
       </div>
     </div>
   </div>
