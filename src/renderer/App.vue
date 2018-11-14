@@ -1,12 +1,14 @@
 <template>
   <div id="app">
-    <div id="nav" class="text-center">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/browse">Browse</router-link>
-
-      <span v-if="$route.params.season" class="float-left">
+    <div id="nav" class="pt-6 mx-2 flex justify-between">
+      <div :class="{invisible: !$route.params.season}">
         <router-link :to="{name: 'show', params: { id: $route.params.id }}">Back</router-link>
-      </span>
+      </div>
+
+      <div>
+        <router-link to="/">Home</router-link> |
+        <router-link to="/browse">Browse</router-link>
+      </div>
 
       <div class="w-12 h-12 float-right">
         <img src="~@/assets/tmdb-logo.png" alt="tmdb_logo">
@@ -35,13 +37,15 @@
     -moz-osx-font-smoothing: grayscale;
     color: #2c3e50;
   }
-  #nav {
-    padding: 30px;
-  }
 
   #nav a {
     font-weight: bold;
     color: #2c3e50;
+    text-decoration: none;
+  }
+
+  #nav a:hover {
+    text-decoration: underline;
   }
 
   #nav a.router-link-exact-active {
