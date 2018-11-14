@@ -81,6 +81,10 @@
           .catch(err => console.log(err))
       },
 
+      toggleWatch (episode) {
+        this.$store.dispatch('Watch/toggleWatch', episode)
+      },
+
       getTorrents (episode) {
         let name = this.$store.getters['Show/show'].name
 
@@ -97,16 +101,6 @@
             })
           })
           .catch(resp => console.log(resp))
-      },
-
-      downloadTorrent (torrent) {
-        this.$modal.hide('torrent-modal')
-
-        this.$store.dispatch('Torrent/download', torrent)
-      },
-
-      toggleWatch (episode) {
-        this.$store.dispatch('Watch/toggleWatch', episode)
       },
 
       getSubtitles (episode) {
