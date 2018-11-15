@@ -1,5 +1,5 @@
 'use strict'
-require('dotenv').config()
+
 process.env.BABEL_ENV = 'renderer'
 
 const path = require('path')

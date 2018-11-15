@@ -5,7 +5,7 @@ const remote = request.defaults({
 })
 
 const baseUrl = 'https://api.themoviedb.org/3'
-const key = `api_key=${process.env.TMDB_KEY}`
+const key = `api_key=5579fa8b31d9d5eb6d527d9ff84becad`
 const lang = 'language=en-US'
 
 export function getPopularShows (page) {
