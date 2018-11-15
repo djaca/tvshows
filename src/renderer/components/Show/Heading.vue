@@ -19,13 +19,22 @@
     </div>
 
     <div>
-      <button @click="add" v-if="!exists">Add</button>
-      <button @click="remove" v-else>Remove</button>
+      <button class="text-blue" @click="add" v-if="!exists">
+        <font-awesome-icon icon="plus" size="2x"></font-awesome-icon>
+      </button>
+      <button class="text-red" @click="remove" v-else>
+        <font-awesome-icon icon="minus" size="2x"></font-awesome-icon>
+      </button>
     </div>
   </div>
 </template>
 
 <script>
+  import { library } from '@fortawesome/fontawesome-svg-core'
+  import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons'
+
+  library.add(faPlus, faMinus)
+
   export default {
     name: 'Heading',
 
