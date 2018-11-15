@@ -18,6 +18,7 @@
           </button>
           <button @click="getTorrents">torrents</button>
           <button @click="getSubtitles">subtitles</button>
+          <button @click="play" v-if="torrent">Watch</button>
           <button @click="openSubtitle" v-if="subtitle">Open subtitle file</button>
         </div>
       </div>
@@ -28,6 +29,7 @@
 <script>
   import { library } from '@fortawesome/fontawesome-svg-core'
   import { faEye } from '@fortawesome/free-solid-svg-icons'
+  import { shell } from 'electron'
   library.add(faEye)
 
   export default {
@@ -37,6 +39,10 @@
       episode: Object,
       watched: Boolean,
       subtitle: {
+        required: false,
+        type: Object
+      },
+      torrent: {
         required: false,
         type: Object
       }
@@ -69,6 +75,14 @@
 
       openSubtitle () {
         this.$electron.shell.openItem(this.subtitle.path)
+      },
+
+      play () {
+        if (this.subtitle) {
+          this.openSubtitle()
+        }
+
+        shell.openItem(`${this.$store.getters['Torrents/downloadPath']}/${this.torrent.path}`)
       }
     }
   }
