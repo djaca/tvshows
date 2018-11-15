@@ -69,6 +69,6 @@ function getTvSubtitles (resp, payload) {
         }
       })
 
-      return subtitles.filter(item => item.episode === payload.episode)
+      return subtitles
     })
 }

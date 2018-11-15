@@ -48,7 +48,10 @@
 
     data () {
       return {
-        loading: false
+        loading: false,
+        results: {
+          subtitles: []
+        }
       }
     },
 
@@ -104,26 +107,25 @@
       },
 
       getSubtitles (episode) {
-        getImdbId(episode.show_id)
+        this.$modal.show(SubtitlesModal, {
+          subtitles: this.results.subtitles.filter(s => s.episode === episode.episode_number),
+          episode: episode.episode_number
+        }, {
+          height: 'auto',
+          width: '60%'
+        })
+      },
+
+      searchSubtitles () {
+        getImdbId(this.$route.params.id)
           .then(resp => {
-            return {
-              imdb_id: resp.imdb_id,
-              season: episode.season_number,
-              episode: episode.episode_number
-            }
+            return resp.imdb_id
           })
-          .then(data => {
-            return searchTitlovi(data)
+          .then(imdbId => {
+            return searchTitlovi({imdb_id: imdbId, season: this.$route.params.season})
               .then(subtitles => {
-                this.$modal.show(SubtitlesModal, {
-                  subtitles,
-                  episode: episode.episode_number
-                }, {
-                  height: 'auto',
-                  width: '60%'
-                })
+                this.results.subtitles = subtitles
               })
-              .catch(err => console.log(err))
           })
           .catch(err => console.log(err))
       }
@@ -131,6 +133,8 @@
 
     mounted () {
       this.getSeason()
+
+      this.searchSubtitles()
     }
   }
 </script>
