@@ -33,12 +33,24 @@ const mutations = {
     }
 
     state.data.push(payload)
+  },
+
+  REMOVE (state, {id, season, episode}) {
+    let found = state.data.findIndex(t => t.showId === id && t.season === season && t.episode === episode)
+
+    if (found !== -1) {
+      state.data.splice(found, 1)
+    }
   }
 }
 
 const actions = {
   add ({commit}, torrent) {
     commit('ADD', torrent)
+  },
+
+  remove ({commit}, payload) {
+    commit('REMOVE', payload)
   }
 }
 

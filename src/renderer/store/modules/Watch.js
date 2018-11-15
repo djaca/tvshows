@@ -11,28 +11,44 @@ const getters = {
 }
 
 const mutations = {
-  TOGGLE (state, {id, season, episode}) {
-    let watchedSeason = state.data.find(s => s.season === season && s.id === id)
-
-    if (watchedSeason) {
-      if (watchedSeason.episodes.includes(episode)) {
-        watchedSeason.episodes.splice(watchedSeason.episodes.findIndex(e => e === episode), 1)
-      } else {
-        watchedSeason.episodes.push(episode)
-      }
+  WATCH (state, payload) {
+    if (payload.index) {
+      state.data[payload.index].episodes.push(payload.episode)
+    } else {
+      state.data.push({id: payload.id, season: payload.season, episodes: [payload.episode]})
     }
+  },
 
-    state.data.push({id, season, episodes: [episode]})
+  UNWATCH (state, {index, episode}) {
+    state.data[index].episodes.splice(state.data[index].episodes.findIndex(e => e === episode), 1)
   }
 }
 
 const actions = {
-  toggleWatch ({commit}, payload) {
-    commit('TOGGLE', {
+  toggleWatch ({dispatch, commit, state}, payload) {
+    const data = {
       id: payload.show_id,
       season: payload.season_number,
       episode: payload.episode_number
-    })
+    }
+
+    let index = state.data.findIndex(s => s.season === data.season && s.id === data.id)
+
+    if (index !== -1) {
+      let watchedSeason = state.data[index]
+
+      if (watchedSeason.episodes.includes(data.episode)) {
+        commit('UNWATCH', {index, 'episode': data.episode})
+      } else {
+        commit('WATCH', {index, 'episode': data.episode})
+        dispatch('Torrents/remove', data, {root: true})
+        dispatch('Subtitles/remove', data, {root: true})
+      }
+    } else {
+      commit('WATCH', data)
+      dispatch('Torrents/remove', data, {root: true})
+      dispatch('Subtitles/remove', data, {root: true})
+    }
   }
 }
 
