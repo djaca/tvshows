@@ -12,6 +12,12 @@ const getters = {
 
 const mutations = {
   ADD (state, payload) {
+    let found = state.data.findIndex(t => t.showId === payload.showId && t.season === payload.season && t.episode === payload.episode)
+
+    if (found !== -1) {
+      state.data.splice(found, 1)
+    }
+
     state.data.push(payload)
   }
 }
