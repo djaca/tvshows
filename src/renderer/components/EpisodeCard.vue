@@ -11,7 +11,11 @@
         <p v-text="episode.overview"></p>
       </div>
 
-      <div class="border-t border-grey-light">
+      <div class="mb-1">
+        <span class="text-xs float-right">Episode {{ episode.episode_number }}</span>
+      </div>
+
+      <div class="border-t border-grey-light text-sm">
         <div class="mt-2">
           <button class="text-blue float-right" @click="toggleWatch">
             <font-awesome-icon icon="eye" size="lg"></font-awesome-icon>
