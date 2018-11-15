@@ -129,6 +129,10 @@
     },
 
     mounted () {
+      if (!this.$store.getters['Show/show']) {
+        this.$router.push({name: 'show', params: {id: this.$route.params.id}})
+      }
+
       this.getSeason()
 
       this.searchSubtitles()
