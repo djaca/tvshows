@@ -119,10 +119,7 @@
       searchSubtitles () {
         getImdbId(this.$route.params.id)
           .then(resp => {
-            return resp.imdb_id
-          })
-          .then(imdbId => {
-            return searchTitlovi({imdb_id: imdbId, season: this.$route.params.season})
+            return searchTitlovi({imdb_id: resp.imdb_id, season: this.$route.params.season})
               .then(subtitles => {
                 this.results.subtitles = subtitles
               })
