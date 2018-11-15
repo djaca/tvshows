@@ -2,7 +2,7 @@
   <div id="app">
     <div id="nav" class="pt-6 mx-2 flex justify-between">
       <div :class="{invisible: !$route.params.season}">
-        <router-link :to="{name: 'show', params: { id: $route.params.id }}">Back</router-link>
+        <router-link v-if="$route.params.id" :to="{name: 'show', params: { id: $route.params.id }}">Back</router-link>
       </div>
 
       <div>
