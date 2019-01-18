@@ -16,10 +16,10 @@
         >
           <episode-card
             :episode="episode"
-            @getTorrents="getTorrents"
             @getSubtitles="getSubtitles"
             @toggleWatch="toggleWatch"
-            :torrent="torrentsVuex.find(t => t.episode === episode.episode_number)"
+            :torrents="torrentsVuex.find(t => t.episode === episode.episode_number)"
+            :torrent="torrents.find(t => t.episode === episode.episode_number)"
             :subtitle="subtitles.find(t => t.episode === episode.episode_number)"
             :watched="watchedEpisodes.includes(episode.episode_number)"
           ></episode-card>
@@ -31,9 +31,7 @@
 
 <script>
   import EpisodeCard from '@/components/EpisodeCard'
-  import TorrentsModal from '@/components/Modals/Torrents'
   import SubtitlesModal from '@/components/Modals/Subtitles'
-  import { searchZooqle } from '@/api/zooqle'
   import { getImdbId } from '@/api/tmdb'
   import { searchTitlovi } from '@/api/titlovi'
   import { library } from '@fortawesome/fontawesome-svg-core'
@@ -44,7 +42,7 @@
   export default {
     name: 'season',
 
-    components: {EpisodeCard, TorrentsModal, SubtitlesModal},
+    components: {EpisodeCard, SubtitlesModal},
 
     data () {
       return {
@@ -68,8 +66,13 @@
         return this.$store.getters['Subtitles/subtitles'](this.$route.params)
       },
 
+      torrents () {
+        return this.$store.getters['Torrents/torrents']
+          .filter(t => t.id === this.$route.params.id && t.season === this.$route.params.season)
+      },
+
       torrentsVuex () {
-        return this.$store.getters['Torrents/torrents'](this.$route.params)
+        return this.$store.getters['Show/torrents'](this.$route.params.season)
       }
     },
 
@@ -86,24 +89,6 @@
 
       toggleWatch (episode) {
         this.$store.dispatch('Watch/toggleWatch', episode)
-      },
-
-      getTorrents (episode) {
-        let name = this.$store.getters['Show/show'].name
-
-        name += episode.season_number <= 9 ? ' S0' + episode.season_number : ' S' + episode.season_number
-        name += episode.episode_number <= 9 ? 'E0' + episode.episode_number : 'E' + episode.episode_number
-
-        searchZooqle(name)
-          .then(torrents => {
-            this.$modal.show(TorrentsModal, {
-              torrents: torrents.sort((a, b) => b.seeders - a.seeders).splice(0, 10)
-            }, {
-              height: 'auto',
-              width: '60%'
-            })
-          })
-          .catch(resp => console.log(resp))
       },
 
       getSubtitles (episode) {

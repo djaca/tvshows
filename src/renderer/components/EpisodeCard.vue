@@ -16,11 +16,16 @@
       </div>
 
       <div class="border-t border-grey-light text-sm">
-        <div class="mt-2">
+        <div class="mt-2" v-if="torrents">
+          <template v-for="(torrent, type) in torrents.torrents">
+            <button class="bg-transparent text-xs hover:bg-blue text-blue-dark font-semibold hover:text-white  py-1 px-2 rounded-full border border-blue hover:border-transparent rounded" @click="download(torrent)">
+              {{ type }}
+            </button>
+
+          </template>
           <button class="text-blue float-right" @click="toggleWatch">
             <font-awesome-icon icon="eye" size="lg"></font-awesome-icon>
           </button>
-          <button @click="getTorrents">torrents</button>
           <button @click="getSubtitles">subtitles</button>
           <button @click="play" v-if="torrent">Watch</button>
           <button @click="openSubtitle" v-if="subtitle">Open subtitle file</button>
@@ -46,10 +51,11 @@
         required: false,
         type: Object
       },
-      torrent: {
+      torrents: {
         required: false,
         type: Object
-      }
+      },
+      torrent: Object
     },
 
     computed: {
@@ -65,6 +71,17 @@
     },
 
     methods: {
+      download (torrent) {
+        this.$store.dispatch('Torrent/download', {
+          ...torrent,
+          episode: this.episode.episode_number,
+          season: this.episode.season_number,
+          id: this.$route.params.id,
+          name: this.episode.name,
+          show: this.$store.getters['Show/show'].name
+        })
+      },
+
       toggleWatch () {
         this.$emit('toggleWatch', this.episode)
       },

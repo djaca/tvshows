@@ -55,7 +55,11 @@
         }
 
         this.$store.dispatch('Show/get', this.$route.params.id)
-          .then(() => (this.loading = false))
+          .then(() => {
+            this.loading = false
+
+            this.$store.dispatch('Show/getTorrents')
+          })
           .catch(err => console.log(err))
       }
     },

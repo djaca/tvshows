@@ -1,14 +1,19 @@
-import { getShow, getEpisodes } from '@/api/tmdb'
+import { getShow, getEpisodes, getImdbId } from '@/api/tmdb'
+import axios from 'axios'
+import groupBy from 'lodash/groupBy'
 
 const state = {
   data: null,
-  episodes: []
+  episodes: [],
+  torrents: []
 }
 
 const getters = {
   show: state => state.data,
 
-  episodes: state => state.episodes
+  episodes: state => state.episodes,
+
+  torrents: state => (season) => state.torrents[season]
 }
 
 const mutations = {
@@ -18,10 +23,28 @@ const mutations = {
 
   SET_EPISODES (state, payload) {
     state.episodes = payload
+  },
+
+  SET_TORRENTS (state, payload) {
+    state.torrents = payload
   }
 }
 
 const actions = {
+  getTorrents ({commit, state}) {
+    getImdbId(state.data.id)
+      .then(resp => {
+        return resp.imdb_id
+      })
+      .then(id => {
+        axios.get(`https://tv-v2.api-fetch.website/show/${id}`)
+          .then(({data}) => {
+            commit('SET_TORRENTS', groupBy(data.episodes, 'season'))
+          })
+      })
+      .catch(err => console.log(err))
+  },
+
   get ({dispatch, commit}, id) {
     return new Promise((resolve, reject) => {
       getShow(id)
@@ -29,7 +52,9 @@ const actions = {
           commit('SET', resp)
           resolve()
         })
-        .catch(err => reject(err))
+        .catch(err => {
+          reject(err)
+        })
     })
   },
 

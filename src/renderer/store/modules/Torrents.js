@@ -17,11 +17,7 @@ const state = {
 const getters = {
   downloadPath: state => state.downloadPath,
 
-  torrents: state => params => {
-    let torrents = state.data.filter(t => t.showId === parseInt(params.id) && t.season === parseInt(params.season))
-
-    return torrents || []
-  }
+  torrents: state => state.data
 }
 
 const mutations = {

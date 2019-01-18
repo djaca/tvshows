@@ -1,10 +1,16 @@
 <template>
   <div class="w-1/3 bg-white mb-4 fixed pin-b" style="right: 0;left: 0;margin-right: auto;margin-left: auto;" v-show="engine">
-    <div class="border p-2">
-      <div v-if="torrent" v-text="torrent.name"></div>
+    <div class="border p-2" v-if="torrent">
+      <div>
+        <div v-text="torrent.show"></div>
+        <div v-text="torrent.name"></div>
+      </div>
       <div v-if="downloadSpeed" v-text="formatBytes(downloadSpeed)"></div>
       <div v-if="downloaded" v-text="formatBytes(downloaded)"></div>
-      <div v-if="fileSize" v-text="formatBytes(fileSize)"></div>
+      <div v-if="fileSize">
+        <font-awesome-icon icon="hdd" size="lg"></font-awesome-icon>
+        <span v-text="formatBytes(fileSize)"></span>
+      </div>
       <div class="shadow w-full bg-grey-light mt-2">
         <div class="bg-teal text-xs leading-none py-1 text-center font-medium text-white" :style="{width: remaining}">
           {{ remaining }}
@@ -16,6 +22,9 @@
 
 <script>
   import torrentStream from 'torrent-stream'
+  import { library } from '@fortawesome/fontawesome-svg-core'
+  import { faHdd } from '@fortawesome/free-solid-svg-icons'
+  library.add(faHdd)
 
   export default {
     name: 'Torrent',
@@ -23,7 +32,7 @@
     watch: {
       torrent (newVal, oldVal) {
         if (newVal) {
-          this.streamTorrent(newVal.magnet)
+          this.streamTorrent(newVal.url)
         }
       }
     },
@@ -32,9 +41,9 @@
       return {
         timer: '',
         engine: null,
-        fileSize: null,
-        downloadSpeed: null,
-        downloaded: null
+        fileSize: 0,
+        downloadSpeed: 0,
+        downloaded: 0
       }
     },
 
@@ -63,18 +72,20 @@
           file.createReadStream()
           this.fileSize = file.length
 
-          let ptn = require('parse-torrent-name')
-          let ptnFileName = ptn(file.name)
           let torrent = {
-            showId: this.$store.getters['Show/show'].id,
-            season: ptnFileName.season,
-            episode: ptnFileName.episode,
+            id: this.torrent.id,
+            season: this.torrent.season,
+            episode: this.torrent.episode,
             path: file.path,
             name: file.name
           }
           this.$store.dispatch('Torrents/add', torrent)
 
           this.timer = setInterval(() => {
+            if (!this.engine) {
+              clearInterval(this.timer)
+              return
+            }
             this.downloadSpeed = this.engine.swarm.downloadSpeed()
             this.downloaded = this.engine.swarm.downloaded
           }, 1000)
