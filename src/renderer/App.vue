@@ -1,21 +1,22 @@
 <template>
   <div id="app">
-    <div id="nav" class="pt-6 mx-2 flex justify-between">
-      <div :class="{invisible: !$route.params.season}">
-        <router-link v-if="$route.params.id" :to="{name: 'show', params: { id: $route.params.id }}">Back</router-link>
-      </div>
-
+    <div id="nav" class="pt-6 mx-2">
       <div>
         <router-link to="/">Home</router-link> |
         <router-link to="/browse">Browse</router-link>
-      </div>
-
-      <div class="w-12 h-12 float-right">
-        <img src="~@/assets/tmdb-logo.png" alt="tmdb_logo">
+        <span :class="{invisible: !$route.params.season}"> |
+        <router-link v-if="$route.params.id" :to="{name: 'show', params: { id: $route.params.id }}">Back</router-link>
+          </span>
       </div>
     </div>
 
     <router-view></router-view>
+
+    <div style="height: 5rem" class="flex items-center">
+      <div class="w-12 h-12">
+        <img src="~@/assets/tmdb-logo.png" alt="tmdb_logo">
+      </div>
+    </div>
 
     <torrent></torrent>
   </div>
