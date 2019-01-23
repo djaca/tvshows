@@ -9,29 +9,31 @@ const remote = request.defaults({
   }
 })
 
-const link = 'https://titlovi.com'
-// const downloadLink = `${link}/download/?type=1&mediaid=`
+const baseUri = 'https://titlovi.com'
+const searchUri = `${baseUri}/titlovi/?prijevod=`
 
-export function searchTitlovi (payload) {
-  return remote.get(`${link}/titlovi/?prijevod=${payload.imdb_id}`)
+export const downloadLink = `${baseUri}/download/?type=1&mediaid=`
+
+export function searchTitlovi ({ imdbId, season }) {
+  return remote.get(searchUri + imdbId)
     .then(resp => {
-      return getTvSubtitles(resp, payload)
+      return getTvSubtitles(resp, season)
     })
 }
 
-function getTvSubtitles (resp, payload) {
+function getTvSubtitles (resp, season) {
   let div = document.createElement('div')
   div.innerHTML = resp.trim()
 
   let uri = div.querySelector('div.download a').getAttribute('href')
 
-  return remote.get(link + uri)
+  return remote.get(baseUri + uri)
     .then(resp => {
       const $ = cheerio.load(resp)
 
       let subtitles = []
       $('ul').find('li div.header h2').each((i, el) => {
-        if ($(el).text() === `Sezona ${String(payload.season)}`) {
+        if ($(el).text() === `Sezona ${String(season)}`) {
           $(el).parent().next().find('.subtitleContainer').each((i, el) => {
             let id = $(el).find('h3').attr('data-id')
 

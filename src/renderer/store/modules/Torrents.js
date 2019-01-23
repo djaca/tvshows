@@ -1,52 +1,134 @@
-const {app} = require('electron').remote
+import torrentStream from 'torrent-stream'
+const { app } = require('electron').remote
+
+let engine = null
+let timer = null
+
+function formatBytes (a, round = false) {
+  if (a === 0) {
+    return '0 Bytes'
+  }
+  let c = 1024
+  let d = 2
+  let e = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+  let f = Math.floor(Math.log(a) / Math.log(c))
+
+  if (round) {
+    return Math.floor(parseFloat((a / Math.pow(c, f)).toFixed(d))) + ' ' + e[f]
+  }
+
+  return parseFloat((a / Math.pow(c, f)).toFixed(d)) + ' ' + e[f]
+}
 
 const state = {
-  downloadPath: `${app.getPath('downloads')}/TVShows`,
-
-  data: [
-    // {
-    //   episode: 1,
-    //   name: 'The.Big.Bang.Theory.S12E01.HDTV.x264-KILLERS.mkv',
-    //   path: 'The.Big.Bang.Theory.S12E01.HDTV.x264-KILLERS[rarbg]/The.Big.Bang.Theory.S12E01.HDTV.x264-KILLERS.mkv',
-    //   season: 12,
-    //   showId: 1418
-    // }
-  ]
+  items: [],
+  torrent: null,
+  size: 0,
+  speed: 0,
+  downloaded: 0
 }
 
 const getters = {
-  downloadPath: state => state.downloadPath,
+  selectedTorrent: state => state.torrent,
 
-  torrents: state => state.data
+  downloading: state => !!state.torrent,
+
+  fileSize: state => formatBytes(state.size, true),
+
+  downloadSpeed: state => formatBytes(state.speed),
+
+  remaining: state => {
+    let remaining = ((state.downloaded / state.size) * 100).toFixed(2)
+
+    return remaining > 1 && remaining <= 100 ? remaining : 0
+  },
+
+  torrent: (state, getters, rootState, rootGetters) => (season, episode) =>
+    state.items.find(t => t.id === rootGetters['Shows/show'].id && t.season === season && t.episode === episode)
 }
 
 const mutations = {
-  ADD (state, payload) {
-    let found = state.data.findIndex(t => t.showId === payload.showId && t.season === payload.season && t.episode === payload.episode)
-
-    if (found !== -1) {
-      state.data.splice(found, 1)
-    }
-
-    state.data.push(payload)
+  SET_TORRENT (state, torrent) {
+    state.torrent = torrent
   },
 
-  REMOVE (state, {id, season, episode}) {
-    let found = state.data.findIndex(t => t.showId === id && t.season === season && t.episode === episode)
+  SET_DOWNLOAD_INFO (state, { speed, downloaded }) {
+    state.speed = speed
+    state.downloaded = downloaded
+  },
 
-    if (found !== -1) {
-      state.data.splice(found, 1)
-    }
+  SET_SIZE (state, size) {
+    state.size = size
+  },
+
+  TOGGLE (state, payload) {
+    let index = state.items.findIndex(t => t.id === payload.id && t.season === payload.season && t.episode === payload.episode)
+
+    index === -1 ? state.items.push(payload) : state.items.splice(index, 1)
   }
 }
 
 const actions = {
-  add ({commit}, torrent) {
-    commit('ADD', torrent)
+  download ({ commit, dispatch, rootGetters }, torrent) {
+    dispatch('clear')
+
+    commit('SET_TORRENT', torrent)
+
+    engine = torrentStream(torrent.url, {path: `${app.getPath('downloads')}/TVShows`})
+
+    engine.on('ready', () => {
+      const file = engine.files[0]
+
+      file.createReadStream()
+
+      commit('SET_SIZE', file.length)
+
+      timer = setInterval(() => {
+        commit('SET_DOWNLOAD_INFO', { speed: engine.swarm.downloadSpeed(), downloaded: engine.swarm.downloaded })
+      }, 1000)
+
+      let data = {
+        id: torrent.id,
+        season: torrent.season,
+        episode: torrent.episode,
+        path: `${app.getPath('downloads')}/TVShows/${file.path}`,
+        name: file.name
+      }
+
+      commit('TOGGLE', data)
+    })
+
+    engine.on('idle', () => {
+      console.log('idle')
+
+      dispatch('clear')
+    })
   },
 
-  remove ({commit}, payload) {
-    commit('REMOVE', payload)
+  cancel ({ commit, state, dispatch }) {
+    commit('TOGGLE', {
+      id: state.torrent.id,
+      season: state.torrent.season,
+      episode: state.torrent.episode
+    })
+
+    dispatch('clear')
+  },
+
+  clear ({ commit }) {
+    if (engine) {
+      engine.destroy()
+      engine = null
+    }
+
+    if (timer) {
+      clearInterval(timer)
+      timer = null
+    }
+
+    commit('SET_TORRENT', null)
+    commit('SET_DOWNLOAD_INFO', { speed: 0, downloaded: 0 })
+    commit('SET_SIZE', 0)
   }
 }
 

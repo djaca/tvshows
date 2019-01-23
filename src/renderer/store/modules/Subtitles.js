@@ -1,18 +1,18 @@
 import { ipcRenderer } from 'electron'
+import { downloadLink } from '@/api/titlovi'
 
 const state = {
   data: []
 }
 
 const getters = {
-  subtitles: state => params => {
-    return state.data.filter(t => t.showId === parseInt(params.id) && t.season === parseInt(params.season))
-  }
+  subtitle: (state, getters, rootState, rootGetters) => (season, episode) =>
+    state.data.find(s => s.id === rootGetters['Shows/show'].id && s.season === season && s.episode === episode)
 }
 
 const mutations = {
   ADD (state, payload) {
-    let found = state.data.findIndex(t => t.showId === payload.showId && t.season === payload.season && t.episode === payload.episode)
+    let found = state.data.findIndex(t => t.id === payload.id && t.season === payload.season && t.episode === payload.episode)
 
     if (found !== -1) {
       state.data.splice(found, 1)
@@ -22,7 +22,7 @@ const mutations = {
   },
 
   REMOVE (state, {id, season, episode}) {
-    let found = state.data.findIndex(t => t.showId === id && t.season === season && t.episode === episode)
+    let found = state.data.findIndex(t => t.id === id && t.season === season && t.episode === episode)
 
     if (found !== -1) {
       state.data.splice(found, 1)
@@ -39,12 +39,21 @@ const actions = {
     commit('REMOVE', payload)
   },
 
-  download ({commit}, {urlId, showId, season, episode}) {
+  download ({commit, dispatch}, {urlId, id, season, episode}) {
     ipcRenderer.send('download-subtitle', {
-      showId,
+      id,
       season,
       episode,
-      url: `https://titlovi.com/download/?type=1&mediaid=${urlId}`
+      url: downloadLink + urlId
+    })
+
+    ipcRenderer.on('subtitle-downloaded', (event, payload) => {
+      // todo: handle file path
+      dispatch('add', payload)
+    })
+
+    ipcRenderer.on('download-subtitle-error', (event, err) => {
+      console.log(err)
     })
   }
 }

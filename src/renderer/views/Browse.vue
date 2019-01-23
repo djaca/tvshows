@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="w-1/2 mx-auto">
-      <form @submit.prevent="search">
+      <form @submit.prevent="doSearch">
         <div class="flex items-center border-b border-b-2 border-teal py-2">
           <input
             class="appearance-none bg-transparent border-none w-full text-grey-darker mr-3 py-1 px-2 leading-tight focus:outline-none"
@@ -22,7 +22,7 @@
           <button
             class="flex-no-shrink bg-teal hover:bg-teal-dark border-teal hover:border-teal-dark text-sm border-4 text-white py-1 px-2 rounded"
             type="button"
-            @click="search"
+            @click="doSearch"
             :disabled="!query"
             :class="{ 'opacity-50 cursor-not-allowed': !query }"
           >
@@ -34,27 +34,26 @@
 
     <div id="results">
       <div class="mt-5">
-          <div class="flex flex-wrap -mx-2">
-            <template >
-              <v-tile
-                v-for="show in shows"
-                :item="show"
-                :key="show.id"
-                @click="goTo(show.id)"
-              ></v-tile>
-            </template>
-          </div>
+        <div class="flex flex-wrap -mx-2">
+          <template>
+            <v-tile
+              v-for="show in shows"
+              :item="show"
+              :key="show.id"
+              @click="goTo(show.id)"
+            ></v-tile>
+          </template>
         </div>
+      </div>
 
-        <div class="my-6">
-          <button
-            class="w-full g-transparent hover:bg-grey-light text-grey-dark font-semibold hover:text-white py-2 px-4 border border-grey hover:border-transparent"
-            @click="loadMore"
-            v-show="hasPopularShows"
-          >
-            Load more
-          </button>
-        </div>
+      <div class="my-6 text-center">
+        <button
+          class="w-1/3 g-transparent hover:bg-grey-light text-grey-dark font-semibold hover:text-white py-2 px-4 border border-grey hover:border-transparent"
+          @click="getPopularShows"
+          v-show="hasPopularShows"
+        >
+          Load more
+        </button>
       </div>
     </div>
   </div>
@@ -62,6 +61,7 @@
 
 <script>
   import VTile from '@/components/VTile'
+  import { mapState, mapGetters, mapActions } from 'vuex'
 
   export default {
     name: 'browse',
@@ -70,30 +70,24 @@
 
     data () {
       return {
-        shows: null
+        shows: null,
+        loader: null
       }
     },
 
     computed: {
+      ...mapState('Browse', ['text', 'popular', 'results']),
+
+      ...mapGetters('Browse', ['hasPopularShows']),
+
       query: {
         get () {
-          return this.$store.state.Browse.query
+          return this.text
         },
+
         set (value) {
-          this.$store.commit('Browse/SET_QUERY', value)
+          this.$store.commit('Browse/SET_TEXT', value.trim())
         }
-      },
-
-      popular () {
-        return this.$store.state.Browse.popular
-      },
-
-      results () {
-        return this.$store.state.Browse.results
-      },
-
-      hasPopularShows () {
-        return this.$store.getters['Browse/hasPopularShows']
       },
 
       showClearBtn () {
@@ -102,57 +96,44 @@
     },
 
     methods: {
+      ...mapActions('Browse', ['getPopular', 'search', 'clearSearch']),
+
       goTo (id) {
-        this.$router.push({ name: 'show', params: { id } })
+        this.$router.push({name: 'show', params: {id}})
       },
 
-      loadMore () {
-        let loader = this.$loading.show()
+      getPopularShows () {
+        this.loader = this.$loading.show()
 
-        this.$store.dispatch('Browse/popular')
+        this.getPopular()
           .then(() => (this.shows = this.popular))
           .catch(err => console.log(err))
-          .finally(() => {
-            loader.hide()
-          })
+          .finally(() => this.loader.hide())
       },
 
       clearSearchField () {
-        this.$store.dispatch('Browse/clearSearch')
+        this.clearSearch()
+
         this.shows = this.popular
       },
 
-      search () {
-        let loader = this.$loading.show()
-        let query = this.query.trim()
+      doSearch () {
+        if (this.query && this.query !== ' ') {
+          this.loader = this.$loading.show()
 
-        if (query && query !== ' ') {
-          return this.$store.dispatch('Browse/search')
+          this.search()
             .then(() => (this.shows = this.results))
             .catch(err => console.log(err))
-            .finally(() => {
-              loader.hide()
-            })
+            .finally(() => this.loader.hide())
         }
       }
     },
 
     mounted () {
       if (!this.shows) {
-        if (this.results) {
-          this.shows = this.results
-        } else {
-          if (!this.hasPopularShows) {
-            let loader = this.$loading.show()
-            this.$store.dispatch('Browse/popular')
-              .then(() => (this.shows = this.popular))
-              .catch(err => console.log(err))
-              .finally(() => {
-                loader.hide()
-              })
-          }
-          this.shows = this.popular
-        }
+        this.results
+          ? this.shows = this.results
+          : !this.hasPopularShows ? this.getPopularShows() : this.shows = this.popular
       }
     }
   }

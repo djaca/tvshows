@@ -1,10 +1,10 @@
 import { getPopularShows, search } from '../../api/tmdb'
 
 const state = {
-  query: '',
+  text: null,
   results: null,
   popular: [],
-  count: 1
+  page: 1
 }
 
 const getters = {
@@ -14,24 +14,26 @@ const getters = {
 const mutations = {
   SET (state, payload) {
     state.popular = state.popular.concat(payload)
-    state.count++
+
+    state.page++
   },
 
   SET_RESULTS (state, payload) {
     state.results = payload
   },
 
-  SET_QUERY (state, value) {
-    state.query = value
+  SET_TEXT (state, value) {
+    state.text = value
   }
 }
 
 const actions = {
-  popular ({commit, state}) {
+  getPopular ({commit, state}) {
     return new Promise((resolve, reject) => {
-      getPopularShows(state.count)
-        .then(resp => {
-          commit('SET', resp.results)
+      getPopularShows(state.page)
+        .then(({results}) => {
+          commit('SET', results)
+
           resolve()
         })
         .catch(err => reject(err))
@@ -40,9 +42,10 @@ const actions = {
 
   search ({commit, state}) {
     return new Promise((resolve, reject) => {
-      search(state.query)
-        .then(resp => {
-          commit('SET_RESULTS', resp.results)
+      search(state.text)
+        .then(({results}) => {
+          commit('SET_RESULTS', results)
+
           resolve()
         })
         .catch(err => reject(err))
@@ -50,7 +53,8 @@ const actions = {
   },
 
   clearSearch ({commit}) {
-    commit('SET_QUERY', '')
+    commit('SET_TEXT', null)
+
     commit('SET_RESULTS', null)
   }
 }

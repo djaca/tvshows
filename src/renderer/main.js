@@ -28,13 +28,3 @@ new Vue({
   store,
   template: '<App/>'
 }).$mount('#app')
-
-const {ipcRenderer} = require('electron')
-ipcRenderer.on('subtitle-downloaded', (event, payload) => {
-  // todo: handle file path
-  store.dispatch('Subtitles/add', payload)
-})
-
-ipcRenderer.on('download-subtitle-error', (event, err) => {
-  console.log(err)
-})

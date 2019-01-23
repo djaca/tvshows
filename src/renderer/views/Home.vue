@@ -12,13 +12,13 @@
 </template>
 
 <script>
+  import { mapGetters } from 'vuex'
+
   export default {
     name: 'home',
 
     computed: {
-      shows () {
-        return this.$store.getters['Shows/shows']
-      }
+      ...mapGetters('Shows', ['shows'])
     }
   }
 </script>

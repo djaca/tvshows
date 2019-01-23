@@ -6,9 +6,8 @@
       <div class="mt-5">
         <div class="px-2">
           <div class="flex flex-wrap -mx-2">
-            <template >
+            <template v-for="season in show.seasons">
               <v-tile
-                v-for="season in show.seasons"
                 :item="season"
                 :key="season.id"
                 @click="goTo(season.season_number)"
@@ -28,11 +27,11 @@
   export default {
     name: 'Show',
 
-    components: {Heading, VTile},
+    components: { Heading, VTile },
 
     computed: {
       show () {
-        return this.$store.getters['Show/show']
+        return this.$store.getters['Shows/show']
       }
     },
 
@@ -41,17 +40,14 @@
         this.$router.push({ name: 'season', params: { id: this.show.id, season } })
       },
 
-      fetchData () {
+      getShow () {
         if (this.show && this.show.id === parseInt(this.$route.params.id)) {
           return
         }
 
         let loader = this.$loading.show()
 
-        this.$store.dispatch('Show/get', this.$route.params.id)
-          .then(() => {
-            this.$store.dispatch('Show/getTorrents')
-          })
+        this.$store.dispatch('Shows/get', this.$route.params.id)
           .catch(err => console.log(err))
           .finally(() => {
             loader.hide()
@@ -60,15 +56,11 @@
     },
 
     watch: {
-      '$route': 'fetchData'
+      '$route': 'getShow'
     },
 
     created () {
-      this.fetchData()
+      this.getShow()
     }
   }
 </script>
-
-<style scoped>
-
-</style>

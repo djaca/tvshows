@@ -50,7 +50,7 @@
       downloadSubtitle (id) {
         this.$store.dispatch('Subtitles/download', {
           urlId: id,
-          showId: parseInt(this.$route.params.id),
+          id: parseInt(this.$route.params.id),
           season: parseInt(this.$route.params.season),
           episode: this.episode
         })

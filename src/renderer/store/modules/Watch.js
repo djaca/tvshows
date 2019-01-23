@@ -3,20 +3,22 @@ const state = {
 }
 
 const getters = {
-  watchedEpisodes: state => params => {
-    let watchedEpisodes = state.data.filter(s => s.id === parseInt(params.id)).find(s => s.season === parseInt(params.season))
+  watched: (state, getters, rootState, rootGetters) => (season, episode) => {
+    let data = state.data.find(s => s.id === rootGetters['Shows/show'].id && s.season === season)
 
-    return watchedEpisodes ? watchedEpisodes.episodes : []
+    return data ? data.episodes.includes(episode) : false
   }
 }
 
 const mutations = {
-  WATCH (state, payload) {
-    if (payload.index) {
-      state.data[payload.index].episodes.push(payload.episode)
-    } else {
-      state.data.push({id: payload.id, season: payload.season, episodes: [payload.episode]})
+  WATCH (state, { index, id, season, episode }) {
+    if (typeof index === 'undefined') {
+      state.data.push({id, season, episodes: [episode]})
+
+      return
     }
+
+    state.data[index].episodes.push(episode)
   },
 
   UNWATCH (state, {index, episode}) {
@@ -26,29 +28,21 @@ const mutations = {
 
 const actions = {
   toggleWatch ({dispatch, commit, state}, payload) {
-    const data = {
-      id: payload.show_id,
-      season: payload.season_number,
-      episode: payload.episode_number
+    let index = state.data.findIndex(s => s.season === payload.season && s.id === payload.id)
+
+    if (index === -1) {
+      commit('WATCH', payload)
+
+      return
     }
 
-    let index = state.data.findIndex(s => s.season === data.season && s.id === data.id)
+    if (state.data[index].episodes.includes(payload.episode)) {
+      commit('UNWATCH', {index, episode: payload.episode})
 
-    if (index !== -1) {
-      let watchedSeason = state.data[index]
-
-      if (watchedSeason.episodes.includes(data.episode)) {
-        commit('UNWATCH', {index, 'episode': data.episode})
-      } else {
-        commit('WATCH', {index, 'episode': data.episode})
-        dispatch('Torrents/remove', data, {root: true})
-        dispatch('Subtitles/remove', data, {root: true})
-      }
-    } else {
-      commit('WATCH', data)
-      dispatch('Torrents/remove', data, {root: true})
-      dispatch('Subtitles/remove', data, {root: true})
+      return
     }
+
+    commit('WATCH', {index, episode: payload.episode})
   }
 }
 

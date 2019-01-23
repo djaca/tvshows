@@ -1,25 +1,22 @@
 <template>
   <div>
-    <div class="text-center text-xl mb-2">
-      <span v-text="show.name" v-if="show"></span> -
-      <span>Season {{ $route.params.season }}</span>
-    </div>
+    <div
+      class="text-center text-3xl my-4"
+      v-text="title"
+      v-if="show"
+    ></div>
 
     <div class="mx-2" v-if="episodes">
       <div class="flex flex-wrap -m-2">
 
-        <div v-for="episode in episodes"
-             :key="episode.episode_number"
-             class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 px-3 mb-4 flex flex-col p-2"
+        <div
+          class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 px-3 mb-4 flex flex-col p-2"
+          v-for="episode in episodes"
+          :key="episode.episode_number"
         >
           <episode-card
             :episode="episode"
-            @getSubtitles="getSubtitles"
-            @toggleWatch="toggleWatch"
-            :torrents="torrentsVuex.find(t => t.episode === episode.episode_number)"
-            :torrent="torrents.find(t => t.episode === episode.episode_number)"
-            :subtitle="subtitles.find(t => t.episode === episode.episode_number)"
-            :watched="watchedEpisodes.includes(episode.episode_number)"
+            @getSubtitles="showSubtitlesModal"
           ></episode-card>
         </div>
       </div>
@@ -30,51 +27,32 @@
 <script>
   import EpisodeCard from '@/components/EpisodeCard'
   import SubtitlesModal from '@/components/Modals/Subtitles'
-  import { getImdbId } from '@/api/tmdb'
-  import { searchTitlovi } from '@/api/titlovi'
   import { library } from '@fortawesome/fontawesome-svg-core'
   import { faDownload } from '@fortawesome/free-solid-svg-icons'
+  import { mapGetters } from 'vuex'
 
   library.add(faDownload)
 
   export default {
-    name: 'season',
+    name: 'Season',
 
-    components: {EpisodeCard, SubtitlesModal},
+    components: { EpisodeCard, SubtitlesModal },
 
     data () {
       return {
-        loading: false,
-        results: {
-          subtitles: []
-        }
+        loader: null
       }
     },
 
     computed: {
-      show () {
-        return this.$store.getters['Show/show']
+      ...mapGetters('Shows', ['show', 'episodes']),
+
+      season () {
+        return this.$route.params.season
       },
 
-      episodes () {
-        return this.$store.getters['Show/episodes']
-      },
-
-      watchedEpisodes () {
-        return this.$store.getters['Watch/watchedEpisodes'](this.$route.params)
-      },
-
-      subtitles () {
-        return this.$store.getters['Subtitles/subtitles'](this.$route.params)
-      },
-
-      torrents () {
-        return this.$store.getters['Torrents/torrents']
-          .filter(t => t.id === this.show.id && t.season === this.$route.params.season)
-      },
-
-      torrentsVuex () {
-        return this.$store.getters['Show/torrents'](this.$route.params.season)
+      title () {
+        return `${this.show.name} - Season ${this.season}`
       }
     },
 
@@ -84,52 +62,26 @@
 
     methods: {
       getSeason () {
-        let loader = this.$loading.show()
+        this.loader = this.$loading.show()
 
-        this.$store.dispatch('Show/getSeason', {
-          id: this.show.id,
-          season: this.$route.params.season
-        })
+        this.$store.dispatch('Shows/getSeason', this.season)
           .catch(err => console.log(err))
-          .finally(() => loader.hide())
+          .finally(() => this.loader.hide())
       },
 
-      toggleWatch (episode) {
-        this.$store.dispatch('Watch/toggleWatch', episode)
-      },
-
-      getSubtitles (episode) {
+      showSubtitlesModal (episode) {
         this.$modal.show(SubtitlesModal, {
-          subtitles: this.results.subtitles.filter(s => s.episode === episode.episode_number),
-          episode: episode.episode_number
+          subtitles: this.$store.getters['Shows/seasonSubtitles'](episode),
+          episode
         }, {
           height: 'auto',
           width: '60%'
         })
-      },
-
-      searchSubtitles () {
-        getImdbId(this.show.id)
-          .then(resp => {
-            return searchTitlovi({imdb_id: resp.imdb_id, season: this.$route.params.season})
-              .then(subtitles => {
-                this.results.subtitles = subtitles
-              })
-          })
-          .catch(err => console.log(err))
       }
     },
 
     mounted () {
-      if (!this.show) {
-        this.$router.push({name: 'show', params: {id: this.show.id}})
-
-        return
-      }
-
-      this.getSeason()
-
-      this.searchSubtitles()
+      this.show ? this.getSeason() : this.$router.push({ name: 'home' })
     }
   }
 </script>

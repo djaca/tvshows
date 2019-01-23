@@ -1,11 +1,15 @@
 <template>
   <div class="mx-2 flex" v-if="show">
     <div class="w-1/2 sm:w-1/4 md:w-1/5 lg:w-1/6 xl:w-1/8 p-2">
-      <img :src="`https://image.tmdb.org/t/p/w342${show.poster_path}`" alt="" class="-mx-2">
+      <img
+        :src="`https://image.tmdb.org/t/p/w342${show.poster_path}`"
+        :alt="show.name"
+        class="-mx-2"
+      >
     </div>
 
     <div class="w-2/3">
-      <div class="text-4xl mb-4">{{ show.name }}</div>
+      <div class="text-4xl mb-4" v-text="show.name"></div>
 
       <div class="mb-6 flex justify-between">
         <span v-text="genre"></span>
@@ -15,14 +19,22 @@
         <span v-text="status"></span>
       </div>
 
-      <div class="">{{ show.overview }}</div>
+      <div v-text="show.overview"></div>
     </div>
 
     <div>
-      <button class="text-blue" @click="add" v-if="!exists">
+      <button
+        class="text-blue"
+        @click="addShow"
+        v-if="!exists"
+      >
         <font-awesome-icon icon="plus" size="2x"></font-awesome-icon>
       </button>
-      <button class="text-red" @click="remove" v-else>
+      <button
+        class="text-red"
+        @click="removeShow"
+        v-else
+      >
         <font-awesome-icon icon="minus" size="2x"></font-awesome-icon>
       </button>
     </div>
@@ -30,6 +42,7 @@
 </template>
 
 <script>
+  import { mapGetters, mapActions } from 'vuex'
   import { library } from '@fortawesome/fontawesome-svg-core'
   import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons'
 
@@ -39,9 +52,7 @@
     name: 'Heading',
 
     computed: {
-      show () {
-        return this.$store.getters['Show/show']
-      },
+      ...mapGetters('Shows', ['show']),
 
       genre () {
         return this.show.genres.map(elem => elem.name).join(' | ')
@@ -69,19 +80,15 @@
     },
 
     methods: {
-      add () {
-        if (!this.exists) {
-          this.$store.dispatch('Shows/add', this.show)
-        }
+      ...mapActions('Shows', ['add', 'remove']),
+
+      addShow () {
+        this.add(this.show)
       },
 
-      remove () {
-        this.$store.dispatch('Shows/remove', this.show.id)
+      removeShow () {
+        this.remove(this.show.id)
       }
     }
   }
 </script>
-
-<style scoped>
-
-</style>
