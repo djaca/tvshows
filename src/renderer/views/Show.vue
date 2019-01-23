@@ -1,23 +1,19 @@
 <template>
   <div>
-    <!-- todo: add loading icon and maybe in vuex -->
-    <div v-if="loading">Loading...</div>
-
-    <div class="mx-2" v-else>
+    <div class="mx-2" v-if="show">
       <heading :show="show"></heading>
 
       <div class="mt-5">
         <div class="px-2">
           <div class="flex flex-wrap -mx-2">
-            <div
-              class="w-1/2 sm:w-1/4 md:w-1/5 lg:w-1/6 xl:w-1/8 px-2 mb-2"
-              v-for="season in show.seasons"
-              :key="season.id"
-            >
-              <router-link :to="{ name: 'season', params: { id: show.id, season: season.season_number }}">
-                <img :src="`https://image.tmdb.org/t/p/w342${season.poster_path}`" alt="">
-              </router-link>
-            </div>
+            <template >
+              <v-tile
+                v-for="season in show.seasons"
+                :item="season"
+                :key="season.id"
+                @click="goTo(season.season_number)"
+              ></v-tile>
+            </template>
           </div>
         </div>
       </div>
@@ -27,17 +23,12 @@
 
 <script>
   import Heading from '@/components/Show/Heading'
+  import VTile from '@/components/VTile'
 
   export default {
     name: 'Show',
 
-    components: {Heading},
-
-    data () {
-      return {
-        loading: false
-      }
-    },
+    components: {Heading, VTile},
 
     computed: {
       show () {
@@ -46,21 +37,25 @@
     },
 
     methods: {
-      fetchData () {
-        this.loading = true
+      goTo (season) {
+        this.$router.push({ name: 'season', params: { id: this.show.id, season } })
+      },
 
+      fetchData () {
         if (this.show && this.show.id === parseInt(this.$route.params.id)) {
-          this.loading = false
           return
         }
 
+        let loader = this.$loading.show()
+
         this.$store.dispatch('Show/get', this.$route.params.id)
           .then(() => {
-            this.loading = false
-
             this.$store.dispatch('Show/getTorrents')
           })
           .catch(err => console.log(err))
+          .finally(() => {
+            loader.hide()
+          })
       }
     },
 

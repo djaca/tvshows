@@ -34,14 +34,15 @@
 
     <div id="results">
       <div class="mt-5">
-
-        <div class="px-2">
           <div class="flex flex-wrap -mx-2">
-            <div class="w-1/2 sm:w-1/4 md:w-1/5 lg:w-1/6 xl:w-1/8 px-2 mb-2" v-for="show in shows" :key="show.id">
-              <router-link :to="{ name: 'show', params: { id: show.id }}">
-                <img :src="`https://image.tmdb.org/t/p/w342${show.poster_path}`" alt="">
-              </router-link>
-            </div>
+            <template >
+              <v-tile
+                v-for="show in shows"
+                :item="show"
+                :key="show.id"
+                @click="goTo(show.id)"
+              ></v-tile>
+            </template>
           </div>
         </div>
 
@@ -60,8 +61,12 @@
 </template>
 
 <script>
+  import VTile from '@/components/VTile'
+
   export default {
     name: 'browse',
+
+    components: {VTile},
 
     data () {
       return {
@@ -97,10 +102,19 @@
     },
 
     methods: {
+      goTo (id) {
+        this.$router.push({ name: 'show', params: { id } })
+      },
+
       loadMore () {
+        let loader = this.$loading.show()
+
         this.$store.dispatch('Browse/popular')
           .then(() => (this.shows = this.popular))
           .catch(err => console.log(err))
+          .finally(() => {
+            loader.hide()
+          })
       },
 
       clearSearchField () {
@@ -109,12 +123,16 @@
       },
 
       search () {
+        let loader = this.$loading.show()
         let query = this.query.trim()
 
         if (query && query !== ' ') {
           return this.$store.dispatch('Browse/search')
             .then(() => (this.shows = this.results))
             .catch(err => console.log(err))
+            .finally(() => {
+              loader.hide()
+            })
         }
       }
     },
@@ -125,9 +143,13 @@
           this.shows = this.results
         } else {
           if (!this.hasPopularShows) {
+            let loader = this.$loading.show()
             this.$store.dispatch('Browse/popular')
               .then(() => (this.shows = this.popular))
               .catch(err => console.log(err))
+              .finally(() => {
+                loader.hide()
+              })
           }
           this.shows = this.popular
         }

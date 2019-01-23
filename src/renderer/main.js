@@ -7,9 +7,13 @@ import '@/assets/styles.css'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import VModal from 'vue-js-modal'
 import { DateTime } from 'luxon'
+import Loading from 'vue-loading-overlay'
+import 'vue-loading-overlay/dist/vue-loading.css'
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.use(VModal, { dynamic: true, injectModalsContainer: true })
+
+Vue.use(Loading)
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.http = Vue.prototype.$http = axios

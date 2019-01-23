@@ -46,6 +46,7 @@ const actions = {
   },
 
   get ({dispatch, commit}, id) {
+    commit('SET', null)
     return new Promise((resolve, reject) => {
       getShow(id)
         .then(resp => {
@@ -59,6 +60,8 @@ const actions = {
   },
 
   getSeason ({commit, state}, {id, season}) {
+    commit('SET_EPISODES', [])
+
     return new Promise((resolve, reject) => {
       getEpisodes(id, season)
         .then(resp => {

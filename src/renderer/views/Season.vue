@@ -1,13 +1,11 @@
 <template>
   <div>
     <div class="text-center text-xl mb-2">
-      <span v-text="$store.getters['Show/show'].name"></span> -
+      <span v-text="show.name" v-if="show"></span> -
       <span>Season {{ $route.params.season }}</span>
     </div>
 
-    <div v-if="loading">Loading...</div>
-
-    <div class="mx-2" v-else>
+    <div class="mx-2" v-if="episodes">
       <div class="flex flex-wrap -m-2">
 
         <div v-for="episode in episodes"
@@ -54,6 +52,10 @@
     },
 
     computed: {
+      show () {
+        return this.$store.getters['Show/show']
+      },
+
       episodes () {
         return this.$store.getters['Show/episodes']
       },
@@ -68,7 +70,7 @@
 
       torrents () {
         return this.$store.getters['Torrents/torrents']
-          .filter(t => t.id === this.$route.params.id && t.season === this.$route.params.season)
+          .filter(t => t.id === this.show.id && t.season === this.$route.params.season)
       },
 
       torrentsVuex () {
@@ -76,15 +78,20 @@
       }
     },
 
+    watch: {
+      '$route': 'getSeason'
+    },
+
     methods: {
       getSeason () {
-        this.loading = true
+        let loader = this.$loading.show()
+
         this.$store.dispatch('Show/getSeason', {
-          id: this.$route.params.id,
+          id: this.show.id,
           season: this.$route.params.season
         })
-          .then(() => (this.loading = false))
           .catch(err => console.log(err))
+          .finally(() => loader.hide())
       },
 
       toggleWatch (episode) {
@@ -102,7 +109,7 @@
       },
 
       searchSubtitles () {
-        getImdbId(this.$route.params.id)
+        getImdbId(this.show.id)
           .then(resp => {
             return searchTitlovi({imdb_id: resp.imdb_id, season: this.$route.params.season})
               .then(subtitles => {
@@ -114,8 +121,10 @@
     },
 
     mounted () {
-      if (!this.$store.getters['Show/show']) {
-        this.$router.push({name: 'show', params: {id: this.$route.params.id}})
+      if (!this.show) {
+        this.$router.push({name: 'show', params: {id: this.show.id}})
+
+        return
       }
 
       this.getSeason()
