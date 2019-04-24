@@ -53,7 +53,6 @@
             ></font-awesome-icon>
           </button>
           <button @click="play" v-if="torrent">Watch</button>
-          <button @click="openSubtitle" v-if="subtitle">Open subtitle file</button>
         </div>
       </div>
     </div>
@@ -62,8 +61,8 @@
 
 <script>
   import { library } from '@fortawesome/fontawesome-svg-core'
-  import { faEye, faClosedCaptioning } from '@fortawesome/free-solid-svg-icons'
-  library.add(faEye, faClosedCaptioning)
+  import { faEye, faClosedCaptioning, faFileArchive } from '@fortawesome/free-solid-svg-icons'
+  library.add(faEye, faClosedCaptioning, faFileArchive)
 
   export default {
     name: 'episode-card',
@@ -136,13 +135,9 @@
         this.$emit('getSubtitles', this.episodeNumber)
       },
 
-      openSubtitle () {
-        this.$electron.shell.openItem(this.subtitle.path)
-      },
-
       play () {
         if (this.subtitle) {
-          this.openSubtitle()
+          this.$electron.shell.openItem(this.subtitle.path)
         }
 
         this.$electron.shell.openItem(this.torrent.path)

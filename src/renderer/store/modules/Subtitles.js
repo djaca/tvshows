@@ -49,7 +49,7 @@ const actions = {
 
     ipcRenderer.on('subtitle-downloaded', (event, payload) => {
       // todo: handle file path
-      dispatch('add', payload)
+      dispatch('add', { ...payload, urlId })
     })
 
     ipcRenderer.on('download-subtitle-error', (event, err) => {
