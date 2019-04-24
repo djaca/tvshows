@@ -18,10 +18,12 @@
         <span class="text-xs float-right">Episode {{ episodeNumber }}</span>
       </div>
 
-      <div class="border-t border-grey-light text-sm">
+      <div
+        class="border-t border-grey-light text-sm"
+        v-if="torrents"
+      >
         <div
           class="mt-2"
-          v-if="torrents"
         >
           <template v-for="(torrent, type) in torrents.torrents">
             <button
@@ -41,7 +43,15 @@
               size="lg"
             ></font-awesome-icon>
           </button>
-          <button @click="getSubtitles">subtitles</button>
+          <button
+            class="downloadTorrentBtn"
+            @click="getSubtitles"
+          >
+            <font-awesome-icon
+              icon="closed-captioning"
+              size="lg"
+            ></font-awesome-icon>
+          </button>
           <button @click="play" v-if="torrent">Watch</button>
           <button @click="openSubtitle" v-if="subtitle">Open subtitle file</button>
         </div>
@@ -52,8 +62,8 @@
 
 <script>
   import { library } from '@fortawesome/fontawesome-svg-core'
-  import { faEye } from '@fortawesome/free-solid-svg-icons'
-  library.add(faEye)
+  import { faEye, faClosedCaptioning } from '@fortawesome/free-solid-svg-icons'
+  library.add(faEye, faClosedCaptioning)
 
   export default {
     name: 'episode-card',
