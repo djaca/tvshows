@@ -13,7 +13,7 @@ const state = {
 }
 
 const getters = {
-  shows: state => state.items,
+  shows: state => [...state.items].sort((a, b) => new Date(b.created_at) - new Date(a.created_at)),
 
   exists: (state) => id => state.items.some(show => show.id === id),
 
@@ -61,7 +61,8 @@ const actions = {
     commit('ADD', {
       id: state.current.id,
       name: state.current.name,
-      img: state.current.poster_path
+      img: state.current.poster_path,
+      created_at: new Date()
     })
   },
 
