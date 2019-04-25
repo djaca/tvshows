@@ -43,8 +43,8 @@ const getters = {
     return remaining > 1 && remaining <= 100 ? remaining : 0
   },
 
-  torrent: (state, getters, rootState, rootGetters) => (season, episode) =>
-    state.items.find(t => t.id === rootGetters['Shows/show'].id && t.season === season && t.episode === episode)
+  torrent: (state, getters, rootState, rootGetters) => (season, episode, id = rootGetters['Shows/show'].id) =>
+    state.items.find(t => t.id === id && t.season === season && t.episode === episode)
 }
 
 const mutations = {

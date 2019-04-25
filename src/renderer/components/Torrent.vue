@@ -11,6 +11,9 @@
           <div class="text-xs">
             <div>Season {{ selectedTorrent.season }}</div>
             <div>Episode {{ selectedTorrent.episode }}</div>
+            <button class="downloadTorrentBtn mt-2" @click="play" v-if="torrent">
+              <font-awesome-icon icon="play"></font-awesome-icon>
+            </button>
           </div>
         </div>
         <div class="w-1/4 text-sm">
@@ -45,8 +48,8 @@
 <script>
   import { mapGetters } from 'vuex'
   import { library } from '@fortawesome/fontawesome-svg-core'
-  import { faHdd, faLongArrowAltDown, faTimes } from '@fortawesome/free-solid-svg-icons'
-  library.add(faHdd, faLongArrowAltDown, faTimes)
+  import { faHdd, faLongArrowAltDown, faTimes, faPlay } from '@fortawesome/free-solid-svg-icons'
+  library.add(faHdd, faLongArrowAltDown, faTimes, faPlay)
 
   export default {
     name: 'Torrent',
@@ -56,12 +59,30 @@
 
       remainingFormatted () {
         return `${this.remaining}%`
+      },
+
+      torrent () {
+        if (this.selectedTorrent) {
+          return this.$store.getters['Torrents/torrent'](this.selectedTorrent.season, this.selectedTorrent.episode, this.selectedTorrent.id)
+        }
+      },
+
+      subtitle () {
+        return this.$store.getters['Subtitles/subtitle'](this.selectedTorrent.season, this.selectedTorrent.episode, this.selectedTorrent.id)
       }
     },
 
     methods: {
       cancel () {
         this.$store.dispatch('Torrents/cancel')
+      },
+
+      play () {
+        if (this.subtitle) {
+          this.$electron.shell.openItem(this.subtitle.path)
+        }
+
+        this.$electron.shell.openItem(this.torrent.path)
       }
     },
 

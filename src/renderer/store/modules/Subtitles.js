@@ -6,8 +6,8 @@ const state = {
 }
 
 const getters = {
-  subtitle: (state, getters, rootState, rootGetters) => (season, episode) =>
-    state.data.find(s => s.id === rootGetters['Shows/show'].id && s.season === season && s.episode === episode)
+  subtitle: (state, getters, rootState, rootGetters) => (season, episode, id = rootGetters['Shows/show'].id) =>
+    state.data.find(s => s.id === parseInt(id) && s.season === season && s.episode === episode)
 }
 
 const mutations = {
