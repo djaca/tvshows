@@ -44,6 +44,12 @@ let defaultConfig = require('tailwindcss/defaultConfig')()
 */
 
 let colors = {
+  'mirage': '#1C2532',
+  'oxford-blue': '#323E4F',
+  'nepal': '#8EACC5',
+  'ebony-clay': '#232D3D',
+  'ebony-clay-2': '#283243',
+
   'transparent': 'transparent',
 
   'black': '#22292f',

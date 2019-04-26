@@ -1,10 +1,10 @@
 <template>
-  <header class="border-b md:flex md:items-center md:justify-between p-4 pb-0 shadow-md md:pb-4 mb-5">
+  <header class="bg-oxford-blue md:flex md:items-center md:justify-between p-4 pb-0 shadow-md md:pb-4 mb-5">
     <div class="flex items-center justify-between mb-4 md:mb-0">
-      <h4 class="leading-none text-lg text-grey-darkest">
+      <h4 class="leading-none text-lg text-nepal">
         <router-link
           to="/"
-          class="no-underline text-grey-darkest hover:text-black"
+          class="no-underline text-nepal hover:text-black"
         >
           TV Shows
         </router-link>
@@ -21,7 +21,7 @@
           <router-link
             v-if="$route.params.id"
             :to="{name: 'show', params: { id: $route.params.id }}"
-            class="text-grey-darkest hover:text-black"
+            class="text-nepal hover:text-black"
           >
             <font-awesome-icon
               icon="arrow-left"
@@ -33,7 +33,7 @@
         <li class="md:ml-4">
           <router-link
             to="/browse"
-            class="block py-2 text-grey-darkest hover:text-black md:border-none md:p-0"
+            class="block py-2 text-nepal hover:text-black md:border-none md:p-0"
           >
             <font-awesome-icon
               icon="search"

@@ -1,16 +1,16 @@
 <template>
   <div
-    class="bg-white rounded-lg shadow-md overflow-hidden flex-1 flex flex-col"
+    class="bg-ebony-clay rounded-lg shadow-md overflow-hidden flex-1 flex flex-col"
     :class="{'opacity-25': watched}"
   >
     <div class="bg-cover h-48" :style="image"></div>
 
-    <div class="p-4 flex-1 flex flex-col">
+    <div class="p-4 flex-1 flex flex-col text-nepal">
       <div class="mb-4">
         <h3 class="text-2xl" v-text="episode.name"></h3>
         <div class="text-xs" v-text="date"></div>
       </div>
-      <div class="mb-4 text-grey-darker text-sm flex-1">
+      <div class="mb-4 text-sm flex-1">
         <p v-text="episode.overview"></p>
       </div>
 

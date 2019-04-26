@@ -8,7 +8,7 @@
       >
     </div>
 
-    <div class="w-2/3">
+    <div class="w-2/3 text-nepal">
       <div class="text-4xl mb-4" v-text="show.name"></div>
 
       <div class="mb-6 flex justify-between">

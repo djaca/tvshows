@@ -1,7 +1,7 @@
 <template>
   <div>
     <div
-      class="text-center text-3xl my-4"
+      class="text-center text-nepal text-3xl my-4"
       v-text="title"
       v-if="show"
     ></div>

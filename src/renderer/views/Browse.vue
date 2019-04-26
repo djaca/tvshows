@@ -2,16 +2,16 @@
   <div>
     <div class="w-1/2 mx-auto">
       <form @submit.prevent="doSearch">
-        <div class="flex items-center border-b border-b-2 border-teal py-2">
+        <div class="flex items-center border-b border-b-2 border-nepal py-2">
           <input
-            class="appearance-none bg-transparent border-none w-full text-grey-darker mr-3 py-1 px-2 leading-tight focus:outline-none"
+            class="appearance-none bg-transparent border-none w-full text-nepal mr-3 py-1 px-2 leading-tight focus:outline-none"
             type="text"
             placeholder="Search TMDB"
             v-model="query"
           >
 
           <button
-            class="flex-no-shrink border-transparent border-4 text-teal hover:text-teal-darker text-sm py-1 px-2 rounded"
+            class="flex-no-shrink border-transparent border-4 text-nepal hover:text-ebony-clay-2 text-sm px-2 rounded"
             type="button"
             @click="clearSearchField"
             v-if="showClearBtn"
@@ -20,7 +20,7 @@
           </button>
 
           <button
-            class="flex-no-shrink bg-teal hover:bg-teal-dark border-teal hover:border-teal-dark text-sm border-4 text-white py-1 px-2 rounded"
+            class="flex-no-shrink bg-transparent hover:text-oxford-blue text-nepal"
             type="button"
             @click="doSearch"
             :disabled="!query"
@@ -42,7 +42,7 @@
 
       <div class="my-6 text-center">
         <button
-          class="w-1/3 g-transparent hover:bg-grey-light text-grey-dark font-semibold hover:text-white py-2 px-4 border border-grey hover:border-transparent"
+          class="w-1/3 bg-ebony-clay-2 hover:bg-ebony-clay text-nepal font-semibold py-2 px-4 border border-ebony-clay hover:border-transparent"
           @click="getPopularShows"
           v-show="hasPopularShows"
         >

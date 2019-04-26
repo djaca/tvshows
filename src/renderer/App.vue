@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" class="bg-mirage min-h-screen">
     <navbar></navbar>
 
     <div class="mx-auto px-2">
