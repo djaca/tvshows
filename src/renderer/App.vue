@@ -1,14 +1,6 @@
 <template>
   <div id="app">
-    <div id="nav" class="pt-6 mx-2">
-      <div>
-        <router-link to="/">Home</router-link> |
-        <router-link to="/browse">Browse</router-link>
-        <span :class="{invisible: !$route.params.season}"> |
-        <router-link v-if="$route.params.id" :to="{name: 'show', params: { id: $route.params.id }}">Back</router-link>
-          </span>
-      </div>
-    </div>
+    <navbar></navbar>
 
     <router-view></router-view>
 
@@ -21,13 +13,15 @@
     <torrent></torrent>
   </div>
 </template>
+
 <script>
+  import Navbar from '@/components/Navbar'
   import Torrent from '@/components/Torrent'
 
   export default {
     name: 'app',
 
-    components: { Torrent }
+    components: { Torrent, Navbar }
   }
 </script>
 
@@ -37,19 +31,5 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     color: #2c3e50;
-  }
-
-  #nav a {
-    font-weight: bold;
-    color: #2c3e50;
-    text-decoration: none;
-  }
-
-  #nav a:hover {
-    text-decoration: underline;
-  }
-
-  #nav a.router-link-exact-active {
-    color: #42b983;
   }
 </style>
