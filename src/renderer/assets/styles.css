@@ -2,6 +2,18 @@
 
 @tailwind components;
 
+body::-webkit-scrollbar {
+    width: 0.4em;
+    background: transparent;
+}
+body::-webkit-scrollbar-thumb {
+    background: #b8bfc5;
+}
+body {
+    width: 100vw;
+    overflow-x: hidden;
+}
+
 .downloadTorrentBtn {
     @apply bg-transparent mr-1 text-xs text-blue-dark font-semibold py-1 px-2 rounded-full border border-blue rounded-full
 }

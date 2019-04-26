@@ -2,7 +2,9 @@
   <div id="app">
     <navbar></navbar>
 
-    <router-view></router-view>
+    <div class="mx-auto px-2">
+      <router-view></router-view>
+    </div>
 
     <div style="height: 5rem" class="flex items-center">
       <div class="w-12 h-12">
