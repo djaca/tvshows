@@ -34,16 +34,10 @@
 
     <div id="results">
       <div class="mt-5">
-        <div class="flex flex-wrap -mx-2">
-          <template>
-            <v-tile
-              v-for="show in shows"
-              :item="show"
-              :key="show.id"
-              @click="goTo(show.id)"
-            ></v-tile>
-          </template>
-        </div>
+        <v-tiles-container
+          :items="items"
+          @click="goTo"
+        />
       </div>
 
       <div class="my-6 text-center">
@@ -60,13 +54,13 @@
 </template>
 
 <script>
-  import VTile from '@/components/VTile'
+  import VTilesContainer from '@/components/VTilesContainer'
   import { mapState, mapGetters, mapActions } from 'vuex'
 
   export default {
     name: 'browse',
 
-    components: {VTile},
+    components: { VTilesContainer },
 
     data () {
       return {
@@ -76,6 +70,19 @@
     },
 
     computed: {
+      items () {
+        if (this.shows) {
+          return this.shows.map(s => {
+            return {
+              id: s.id,
+              img: s.poster_path
+            }
+          })
+        }
+
+        return []
+      },
+
       ...mapState('Browse', ['text', 'popular', 'results']),
 
       ...mapGetters('Browse', ['hasPopularShows']),
@@ -98,8 +105,8 @@
     methods: {
       ...mapActions('Browse', ['getPopular', 'search', 'clearSearch']),
 
-      goTo (id) {
-        this.$router.push({name: 'show', params: {id}})
+      goTo ({ id }) {
+        this.$router.push({name: 'show', params: { id }})
       },
 
       getPopularShows () {

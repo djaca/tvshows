@@ -1,43 +1,43 @@
 <template>
-  <div>
-    <div class="mx-2" v-if="show">
-      <heading :show="show"></heading>
+  <div v-if="show">
+    <heading></heading>
 
-      <div class="mt-5">
-        <div class="px-2">
-          <div class="flex flex-wrap -mx-2">
-            <template v-for="season in show.seasons">
-              <v-tile
-                :item="season"
-                :key="season.id"
-                @click="goTo(season.season_number)"
-              ></v-tile>
-            </template>
-          </div>
-        </div>
-      </div>
+    <div class="mt-5">
+      <v-tiles-container
+        :items="items"
+        @click="goTo"
+      />
     </div>
   </div>
 </template>
 
 <script>
   import Heading from '@/components/Show/Heading'
-  import VTile from '@/components/VTile'
+  import VTilesContainer from '@/components/VTilesContainer'
 
   export default {
     name: 'Show',
 
-    components: { Heading, VTile },
+    components: { Heading, VTilesContainer },
 
     computed: {
       show () {
         return this.$store.getters['Shows/show']
+      },
+
+      items () {
+        return this.show.seasons.map(s => {
+          return {
+            id: s.season_number,
+            img: s.poster_path
+          }
+        })
       }
     },
 
     methods: {
-      goTo (season) {
-        this.$router.push({ name: 'season', params: { id: this.show.id, season } })
+      goTo ({ id }) {
+        this.$router.push({ name: 'season', params: { id: this.show.id, season: id } })
       },
 
       getShow () {
