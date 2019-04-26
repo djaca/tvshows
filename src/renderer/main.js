@@ -13,7 +13,12 @@ import 'vue-loading-overlay/dist/vue-loading.css'
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.use(VModal, { dynamic: true, injectModalsContainer: true })
 
-Vue.use(Loading)
+Vue.use(Loading, {
+  backgroundColor: '#232D3D',
+  color: '#8EACC5',
+  width: 80,
+  height: 80
+})
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.http = Vue.prototype.$http = axios
