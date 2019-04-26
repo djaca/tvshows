@@ -5,7 +5,7 @@
     <div class="mt-5">
       <v-tiles-container
         :items="items"
-        @click="goTo"
+        @click="goTo('season', { id: show.id, season: $event.id })"
       />
     </div>
   </div>
@@ -14,11 +14,14 @@
 <script>
   import Heading from '@/components/Show/Heading'
   import VTilesContainer from '@/components/VTilesContainer'
+  import goTo from '@/mixins/route'
 
   export default {
     name: 'Show',
 
     components: { Heading, VTilesContainer },
+
+    mixins: [goTo],
 
     computed: {
       show () {
@@ -36,10 +39,6 @@
     },
 
     methods: {
-      goTo ({ id }) {
-        this.$router.push({ name: 'season', params: { id: this.show.id, season: id } })
-      },
-
       getShow () {
         if (this.show && this.show.id === parseInt(this.$route.params.id)) {
           return

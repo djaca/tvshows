@@ -36,7 +36,7 @@
       <div class="mt-5">
         <v-tiles-container
           :items="items"
-          @click="goTo"
+          @click="goTo('show', { id: $event.id })"
         />
       </div>
 
@@ -56,11 +56,14 @@
 <script>
   import VTilesContainer from '@/components/VTilesContainer'
   import { mapState, mapGetters, mapActions } from 'vuex'
+  import goTo from '@/mixins/route'
 
   export default {
     name: 'browse',
 
     components: { VTilesContainer },
+
+    mixins: [goTo],
 
     data () {
       return {
@@ -104,10 +107,6 @@
 
     methods: {
       ...mapActions('Browse', ['getPopular', 'search', 'clearSearch']),
-
-      goTo ({ id }) {
-        this.$router.push({name: 'show', params: { id }})
-      },
 
       getPopularShows () {
         this.loader = this.$loading.show()
