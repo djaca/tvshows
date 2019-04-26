@@ -1,40 +1,40 @@
 <template>
-  <div class="p-4">
+  <div class="p-4 bg-ebony-clay-2 border border-ebony-clay-2">
     <table class="w-full text-left">
       <thead>
       <tr>
-        <th class="py-3 px-4 bg-grey-lighter font-sans font-medium uppercase text-sm text-grey border-b border-grey-light">
+        <th class="py-3 px-4 bg-transparent font-sans font-medium uppercase text-sm text-nepal border-b border-ebony-clay">
           Versions
         </th>
-        <th class="py-3 px-4 bg-grey-lighter font-sans font-medium uppercase text-sm text-grey border-b border-grey-light"></th>
-        <th class="py-3 px-4 bg-grey-lighter font-sans font-medium uppercase text-sm text-grey border-b border-grey-light w-32">
+        <th class="py-3 px-4 bg-transparent font-sans font-medium uppercase text-sm text-nepal border-b border-ebony-clay"></th>
+        <th class="py-3 px-4 bg-transparent font-sans font-medium uppercase text-sm text-nepal border-b border-ebony-clay w-32">
           Language
         </th>
         <th
-          class="py-3 px-4 bg-grey-lighter font-sans font-medium uppercase text-sm text-grey border-b border-grey-light">
+          class="py-3 px-4 bg-transparent font-sans font-medium uppercase text-sm text-nepal border-b border-ebony-clay">
           Author
         </th>
         <th
-          class="py-3 px-4 bg-grey-lighter font-sans font-medium uppercase text-sm text-grey border-b border-grey-light">
+          class="py-3 px-4 bg-transparent font-sans font-medium uppercase text-sm text-nepal border-b border-ebony-clay">
           Downloaded
         </th>
       </tr>
       </thead>
       <tbody>
-      <tr class="hover:bg-blue-lightest" v-for="subtitle in subtitles">
-        <td class="py-3 px-4 border-b border-grey-light">{{ subtitle.versions }}</td>
-        <td class="py-3 px-4 border-b border-grey-light text-center">
-          <button v-if="!exists(subtitle.id)" class="text-blue" @click="download(subtitle.id)">
+      <tr v-for="subtitle in subtitles" class="text-nepal">
+        <td class="py-3 px-4 border-b border-ebony-clay">{{ subtitle.versions }}</td>
+        <td class="py-3 px-4 border-b border-ebony-clay text-center">
+          <button v-if="!exists(subtitle.id)" class="text-nepal hover:text-oxford-blue" @click="download(subtitle.id)">
             <font-awesome-icon icon="download" size="lg"></font-awesome-icon>
           </button>
 
-          <button v-else class="text-blue" @click="open">
+          <button v-else class="text-nepal hover:text-oxford-blue" @click="open">
             <font-awesome-icon icon="file-archive" size="lg"></font-awesome-icon>
           </button>
         </td>
-        <td class="py-3 px-4 border-b border-grey-light">{{ subtitle.language }}</td>
-        <td class="py-3 px-4 border-b border-grey-light">{{ subtitle.author }}</td>
-        <td class="py-3 px-4 border-b border-grey-light">{{ subtitle.downloadCount }}</td>
+        <td class="py-3 px-4 border-b border-ebony-clay">{{ subtitle.language }}</td>
+        <td class="py-3 px-4 border-b border-ebony-clay">{{ subtitle.author }}</td>
+        <td class="py-3 px-4 border-b border-ebony-clay">{{ subtitle.downloadCount }}</td>
       </tr>
       </tbody>
     </table>
@@ -74,7 +74,6 @@
 
       exists (id) {
         if (this.subtitle) {
-          console.log(id, this.subtitle.urlId)
           return id === this.subtitle.urlId
         }
       }
