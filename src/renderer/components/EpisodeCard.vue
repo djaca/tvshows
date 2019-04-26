@@ -23,7 +23,7 @@
         v-if="torrents"
       >
         <div
-          class="mt-2"
+          class="mt-2 overflow-hidden"
         >
           <template v-for="(torrent, type) in torrents.torrents">
             <button
@@ -34,8 +34,9 @@
             </button>
 
           </template>
+
           <button
-            class="text-blue float-right"
+            class="text-nepal hover:text-oxford-blue float-right"
             @click="toggleWatch"
           >
             <font-awesome-icon
@@ -43,6 +44,7 @@
               size="lg"
             ></font-awesome-icon>
           </button>
+
           <button
             class="downloadTorrentBtn"
             @click="getSubtitles"
@@ -52,6 +54,7 @@
               size="lg"
             ></font-awesome-icon>
           </button>
+
           <button @click="play" v-if="torrent">Watch</button>
         </div>
       </div>

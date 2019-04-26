@@ -6,7 +6,7 @@
       <router-view></router-view>
     </div>
 
-    <div style="height: 5rem" class="flex items-center">
+    <div style="height: 8rem" class="flex items-center">
       <div class="w-12 h-12">
         <img src="~@/assets/tmdb-logo.png" alt="tmdb_logo">
       </div>

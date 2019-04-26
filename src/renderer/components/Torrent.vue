@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-1/3 bg-white mb-4 fixed pin-b shadow-lg"
+    class="w-1/3 mb-4 fixed pin-b bg-ebony-clay text-nepal"
     style="right: 0;left: 0;margin-right: auto;margin-left: auto;"
     v-show="downloading"
   >
@@ -19,26 +19,26 @@
         <div class="w-1/4 text-sm">
           <table>
             <tr>
-              <td><font-awesome-icon icon="hdd" color="grey"></font-awesome-icon></td>
+              <td><font-awesome-icon icon="hdd" color="#323E4F"></font-awesome-icon></td>
               <td><span v-text="fileSize"></span></td>
             </tr>
             <tr>
-              <td><font-awesome-icon icon="long-arrow-alt-down" color="green"></font-awesome-icon></td>
+              <td><font-awesome-icon icon="long-arrow-alt-down" color="#1BB934"></font-awesome-icon></td>
               <td><span v-text="downloadSpeed"></span></td>
             </tr>
           </table>
         </div>
       </div>
 
-      <div class="shadow-md w-full bg-grey-lighter mt-2">
-        <div class="bg-green text-xs leading-none py-1 text-center font-bold text-black" :style="{width: remainingFormatted}">
+      <div class="shadow-md w-full bg-nepal mt-2">
+        <div class="bg-malachite text-xs leading-none py-1 text-center font-bold text-oxford-blue" :style="{width: remainingFormatted}">
           {{ remainingFormatted }}
         </div>
       </div>
 
       <span class="absolute p-1" style="top: 0; right: 0">
         <button class="hover:text-grey" @click="cancel">
-          <font-awesome-icon icon="times" color="red"></font-awesome-icon>
+          <font-awesome-icon icon="times" color="#E1112C"></font-awesome-icon>
         </button>
       </span>
     </div>

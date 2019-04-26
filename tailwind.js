@@ -49,6 +49,7 @@ let colors = {
   'nepal': '#8EACC5',
   'ebony-clay': '#232D3D',
   'ebony-clay-2': '#283243',
+  'malachite': '#1BB934',
 
   'transparent': 'transparent',
 
