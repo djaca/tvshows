@@ -16,7 +16,7 @@
         >
           <episode-card
             :episode="episode"
-            @getSubtitles="showSubtitlesModal"
+            @get-subtitles="showSubtitlesModal"
           ></episode-card>
         </div>
       </div>
