@@ -48,10 +48,6 @@
 </template>
 
 <script>
-  import { library } from '@fortawesome/fontawesome-svg-core'
-  import { faSearch, faArrowLeft } from '@fortawesome/free-solid-svg-icons'
-  library.add(faSearch, faArrowLeft)
-
   export default {
     name: 'Navbar'
   }

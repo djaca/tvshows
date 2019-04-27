@@ -47,9 +47,6 @@
 
 <script>
   import { mapGetters } from 'vuex'
-  import { library } from '@fortawesome/fontawesome-svg-core'
-  import { faHdd, faLongArrowAltDown, faTimes, faPlay } from '@fortawesome/free-solid-svg-icons'
-  library.add(faHdd, faLongArrowAltDown, faTimes, faPlay)
 
   export default {
     name: 'Torrent',

@@ -35,10 +35,6 @@
 </template>
 
 <script>
-  import { library } from '@fortawesome/fontawesome-svg-core'
-  import { faEye, faClosedCaptioning, faFileArchive } from '@fortawesome/free-solid-svg-icons'
-  library.add(faEye, faClosedCaptioning, faFileArchive)
-
   export default {
     name: 'CardActions',
 

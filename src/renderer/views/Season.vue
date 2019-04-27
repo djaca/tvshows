@@ -27,11 +27,7 @@
 <script>
   import EpisodeCard from '@/components/EpisodeCard'
   import SubtitlesModal from '@/components/Modals/Subtitles'
-  import { library } from '@fortawesome/fontawesome-svg-core'
-  import { faDownload } from '@fortawesome/free-solid-svg-icons'
   import { mapGetters } from 'vuex'
-
-  library.add(faDownload)
 
   export default {
     name: 'Season',
