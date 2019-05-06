@@ -69,7 +69,7 @@
 
     methods: {
       download (torrent) {
-        this.$store.dispatch('Torrents/download', {
+        this.$store.dispatch('Torrent/download', {
           ...torrent,
           show: this.$store.getters['Shows/show'].name,
           id: this.$route.params.id,

@@ -52,7 +52,7 @@
     name: 'Torrent',
 
     computed: {
-      ...mapGetters('Torrents', ['selectedTorrent', 'downloading', 'fileSize', 'downloadSpeed', 'remaining']),
+      ...mapGetters('Torrent', ['selectedTorrent', 'downloading', 'fileSize', 'downloadSpeed', 'remaining']),
 
       remainingFormatted () {
         return `${this.remaining}%`
@@ -71,7 +71,7 @@
 
     methods: {
       cancel () {
-        this.$store.dispatch('Torrents/cancel')
+        this.$store.dispatch('Torrent/cancel')
       },
 
       play () {
