@@ -30,7 +30,16 @@
       ></font-awesome-icon>
     </button>
 
-    <button @click="play" v-if="torrent">Watch</button>
+    <button
+      class="downloadTorrentBtn"
+      @click="play"
+      v-if="torrent"
+    >
+      <font-awesome-icon
+        icon="play"
+        size="lg"
+      ></font-awesome-icon>
+    </button>
   </div>
 </template>
 
