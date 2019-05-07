@@ -26,7 +26,7 @@
             <font-awesome-icon
               icon="arrow-left"
               size="lg"
-            ></font-awesome-icon>
+            />
           </router-link>
         </li>
 
@@ -38,12 +38,11 @@
             <font-awesome-icon
               icon="search"
               size="lg"
-            ></font-awesome-icon>
+            />
           </router-link>
         </li>
       </ul>
     </nav>
-
   </header>
 </template>
 
@@ -52,7 +51,3 @@
     name: 'Navbar'
   }
 </script>
-
-<style scoped>
-
-</style>
