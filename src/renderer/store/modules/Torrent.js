@@ -63,8 +63,6 @@ const actions = {
     dispatch('clear')
       .then(() => {
         commit('SET_TORRENT', torrent)
-
-        dispatch('Torrents/add', torrent, { root: true })
       })
 
     engine = torrentStream(torrent.url, {path: `${app.getPath('downloads')}/TVShows`})
@@ -79,6 +77,14 @@ const actions = {
       timer = setInterval(() => {
         commit('SET_DOWNLOAD_INFO', { speed: engine.swarm.downloadSpeed(), downloaded: engine.swarm.downloaded })
       }, 1000)
+
+      dispatch('Torrents/add', {
+        id: torrent.id,
+        season: torrent.season,
+        episode: torrent.episode,
+        path: `${app.getPath('downloads')}/TVShows/${file.path}`,
+        name: file.name
+      }, { root: true })
     })
 
     engine.on('idle', () => {
