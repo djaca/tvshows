@@ -1,15 +1,21 @@
 <template>
-  <div class="mx-2 flex" v-if="show">
+  <div
+    class="mx-2 flex"
+    v-if="show"
+  >
     <div class="w-1/2 sm:w-1/4 md:w-1/5 lg:w-1/6 xl:w-1/8 p-2">
       <img
-        :src="`https://image.tmdb.org/t/p/w342${show.poster_path}`"
-        :alt="show.name"
+        :src="img"
+        :alt="name"
         class="-mx-2"
       >
     </div>
 
     <div class="w-2/3 text-nepal">
-      <div class="text-4xl mb-4" v-text="show.name"></div>
+      <div
+        class="text-4xl mb-4"
+        v-text="name"
+      ></div>
 
       <div class="mb-6 flex justify-between">
         <span v-text="genre"></span>
@@ -25,17 +31,22 @@
     <div>
       <button
         class="text-blue"
-        @click="addShow"
+        @click="add"
         v-if="!exists"
       >
-        <font-awesome-icon icon="plus" size="2x"></font-awesome-icon>
+        <font-awesome-icon
+          icon="plus"
+          size="2x"
+        />
       </button>
       <button
         class="text-red"
-        @click="removeShow"
+        @click="remove(show.id)"
         v-else
       >
-        <font-awesome-icon icon="minus" size="2x"></font-awesome-icon>
+        <font-awesome-icon
+          icon="minus"
+          size="2x"/>
       </button>
     </div>
   </div>
@@ -49,6 +60,10 @@
 
     computed: {
       ...mapGetters('Shows', ['show']),
+
+      name () {
+        return this.show.name
+      },
 
       genre () {
         return this.show.genres.map(elem => elem.name).join(' | ')
@@ -72,19 +87,15 @@
 
       exists () {
         return this.$store.getters['Shows/exists'](this.show.id)
+      },
+
+      img () {
+        return `https://image.tmdb.org/t/p/w342${this.show.poster_path}`
       }
     },
 
     methods: {
-      ...mapActions('Shows', ['add', 'remove']),
-
-      addShow () {
-        this.add(this.show)
-      },
-
-      removeShow () {
-        this.remove(this.show.id)
-      }
+      ...mapActions('Shows', ['add', 'remove'])
     }
   }
 </script>

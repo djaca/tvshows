@@ -66,8 +66,8 @@ const actions = {
     })
   },
 
-  remove ({ commit, state }) {
-    commit('REMOVE', state.current.id)
+  remove ({ commit }, id) {
+    commit('REMOVE', id)
   },
 
   fetchShow ({ commit }, id) {
