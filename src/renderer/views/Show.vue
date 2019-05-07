@@ -1,6 +1,6 @@
 <template>
   <div v-if="show">
-    <heading></heading>
+    <heading/>
 
     <div class="mt-5">
       <v-tiles-container
@@ -15,6 +15,7 @@
   import Heading from '@/components/Show/Heading'
   import VTilesContainer from '@/components/VTilesContainer'
   import goTo from '@/mixins/route'
+  import { mapGetters, mapActions } from 'vuex'
 
   export default {
     name: 'Show',
@@ -24,8 +25,10 @@
     mixins: [goTo],
 
     computed: {
-      show () {
-        return this.$store.getters['Shows/show']
+      ...mapGetters('Shows', ['show']),
+
+      id () {
+        return this.$route.params.id
       },
 
       items () {
@@ -39,18 +42,18 @@
     },
 
     methods: {
+      ...mapActions('Shows', ['fetchShow']),
+
       getShow () {
-        if (this.show && this.show.id === parseInt(this.$route.params.id)) {
+        if (this.show && this.show.id === parseInt(this.id)) {
           return
         }
 
         let loader = this.$loading.show()
 
-        this.$store.dispatch('Shows/get', this.$route.params.id)
-          .catch(err => console.log(err))
-          .finally(() => {
-            loader.hide()
-          })
+        this.fetchShow(this.id)
+          .catch(err => (console.log(err)))
+          .finally(() => (loader.hide()))
       }
     },
 
@@ -58,7 +61,7 @@
       '$route': 'getShow'
     },
 
-    created () {
+    mounted () {
       this.getShow()
     }
   }

@@ -70,7 +70,7 @@ const actions = {
     commit('REMOVE', state.current.id)
   },
 
-  get ({ commit }, id) {
+  fetchShow ({ commit }, id) {
     commit('SET', null)
 
     return new Promise((resolve, reject) => {
