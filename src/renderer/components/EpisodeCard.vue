@@ -34,6 +34,8 @@
 
 <script>
   import CardActions from '@/components/EpisodeCard/CardActions'
+  import SubtitlesModal from '@/components/Modals/Subtitles'
+  import { mapGetters } from 'vuex'
 
   export default {
     name: 'episode-card',
@@ -48,6 +50,8 @@
     },
 
     computed: {
+      ...mapGetters('Shows', ['seasonSubtitles']),
+
       episode () {
         return this.item.episode_number
       },
@@ -77,7 +81,13 @@
 
     methods: {
       getSubtitles () {
-        this.$emit('get-subtitles', this.episode)
+        this.$modal.show(SubtitlesModal, {
+          subtitles: this.seasonSubtitles(this.episode),
+          episode: this.episode
+        }, {
+          height: 'auto',
+          width: '60%'
+        })
       }
     }
   }

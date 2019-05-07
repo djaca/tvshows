@@ -14,10 +14,7 @@
           v-for="episode in episodes"
           :key="episode.episode_number"
         >
-          <episode-card
-            :item="episode"
-            @get-subtitles="showSubtitlesModal"
-          ></episode-card>
+          <episode-card :item="episode"></episode-card>
         </div>
       </div>
     </div>
@@ -26,13 +23,12 @@
 
 <script>
   import EpisodeCard from '@/components/EpisodeCard'
-  import SubtitlesModal from '@/components/Modals/Subtitles'
   import { mapGetters } from 'vuex'
 
   export default {
     name: 'Season',
 
-    components: { EpisodeCard, SubtitlesModal },
+    components: { EpisodeCard },
 
     data () {
       return {
@@ -63,16 +59,6 @@
         this.$store.dispatch('Shows/getSeason', this.season)
           .catch(err => console.log(err))
           .finally(() => this.loader.hide())
-      },
-
-      showSubtitlesModal (episode) {
-        this.$modal.show(SubtitlesModal, {
-          subtitles: this.$store.getters['Shows/seasonSubtitles'](episode),
-          episode
-        }, {
-          height: 'auto',
-          width: '60%'
-        })
       }
     },
 
