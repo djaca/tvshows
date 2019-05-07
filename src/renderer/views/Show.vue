@@ -61,7 +61,7 @@
       '$route': 'getShow'
     },
 
-    mounted () {
+    beforeMount () {
       this.getShow()
     }
   }
