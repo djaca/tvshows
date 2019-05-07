@@ -1,6 +1,6 @@
 <template>
   <div class="p-4 bg-ebony-clay-2 border border-ebony-clay-2 text-nepal">
-    <table class="w-full">
+    <table class="table w-full">
       <thead>
       <tr>
         <th
