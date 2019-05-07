@@ -61,10 +61,11 @@ const mutations = {
 const actions = {
   download ({ commit, dispatch, rootGetters }, torrent) {
     dispatch('clear')
+      .then(() => {
+        commit('SET_TORRENT', torrent)
 
-    commit('SET_TORRENT', torrent)
-
-    commit('Torrents/ADD', torrent, { root: true })
+        dispatch('Torrents/add', torrent, { root: true })
+      })
 
     engine = torrentStream(torrent.url, {path: `${app.getPath('downloads')}/TVShows`})
 
@@ -78,16 +79,6 @@ const actions = {
       timer = setInterval(() => {
         commit('SET_DOWNLOAD_INFO', { speed: engine.swarm.downloadSpeed(), downloaded: engine.swarm.downloaded })
       }, 1000)
-
-      // let data = {
-      //   id: torrent.id,
-      //   season: torrent.season,
-      //   episode: torrent.episode,
-      //   path: `${app.getPath('downloads')}/TVShows/${file.path}`,
-      //   name: file.name
-      // }
-
-      // commit('TOGGLE', data)
     })
 
     engine.on('idle', () => {
@@ -97,30 +88,34 @@ const actions = {
     })
   },
 
-  cancel ({ commit, state, dispatch }) {
-    // commit('TOGGLE', {
-    //   id: state.torrent.id,
-    //   season: state.torrent.season,
-    //   episode: state.torrent.episode
-    // })
+  cancel ({ state, dispatch }) {
+    dispatch('Torrents/remove', {
+      id: state.torrent.id,
+      season: state.torrent.season,
+      episode: state.torrent.episode
+    }, { root: true })
 
     dispatch('clear')
   },
 
   clear ({ commit }) {
-    if (engine) {
-      engine.destroy()
-      engine = null
-    }
+    return new Promise(resolve => {
+      if (engine) {
+        engine.destroy()
+        engine = null
+      }
 
-    if (timer) {
-      clearInterval(timer)
-      timer = null
-    }
+      if (timer) {
+        clearInterval(timer)
+        timer = null
+      }
 
-    commit('SET_TORRENT', null)
-    commit('SET_DOWNLOAD_INFO', { speed: 0, downloaded: 0 })
-    commit('SET_SIZE', 0)
+      commit('SET_TORRENT', null)
+      commit('SET_DOWNLOAD_INFO', { speed: 0, downloaded: 0 })
+      commit('SET_SIZE', 0)
+
+      resolve()
+    })
   }
 }
 
