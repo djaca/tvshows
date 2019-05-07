@@ -1,40 +1,47 @@
 <template>
-  <div class="p-4 bg-ebony-clay-2 border border-ebony-clay-2">
-    <table class="w-full text-left">
+  <div class="p-4 bg-ebony-clay-2 border border-ebony-clay-2 text-nepal">
+    <table class="w-full">
       <thead>
       <tr>
-        <th class="py-3 px-4 bg-transparent font-sans font-medium uppercase text-sm text-nepal border-b border-ebony-clay">
-          Versions
-        </th>
-        <th class="py-3 px-4 bg-transparent font-sans font-medium uppercase text-sm text-nepal border-b border-ebony-clay"></th>
-        <th class="py-3 px-4 bg-transparent font-sans font-medium uppercase text-sm text-nepal border-b border-ebony-clay w-32">
-          Language
-        </th>
         <th
-          class="py-3 px-4 bg-transparent font-sans font-medium uppercase text-sm text-nepal border-b border-ebony-clay">
-          Author
-        </th>
-        <th
-          class="py-3 px-4 bg-transparent font-sans font-medium uppercase text-sm text-nepal border-b border-ebony-clay">
-          Downloaded
-        </th>
+          v-for="(header, i) in headers"
+          :key="i"
+          v-text="header"
+        ></th>
       </tr>
       </thead>
+
       <tbody>
-      <tr v-for="subtitle in subtitles" class="text-nepal">
-        <td class="py-3 px-4 border-b border-ebony-clay">{{ subtitle.versions }}</td>
-        <td class="py-3 px-4 border-b border-ebony-clay text-center">
-          <button v-if="!exists(subtitle.id)" class="text-nepal hover:text-oxford-blue" @click="download(subtitle.id)">
-            <font-awesome-icon icon="download" size="lg"></font-awesome-icon>
+      <tr
+        v-for="(subtitle, i) in subtitles"
+        :key="i"
+      >
+        <td v-text="subtitle.versions"></td>
+        <td>
+          <button
+            v-if="!exists(subtitle.id)"
+            class="text-nepal hover:text-oxford-blue"
+            @click="doDownload(subtitle.id)"
+          >
+            <font-awesome-icon
+              icon="download"
+              size="lg"/>
           </button>
 
-          <button v-else class="text-nepal hover:text-oxford-blue" @click="open">
-            <font-awesome-icon icon="file-archive" size="lg"></font-awesome-icon>
+          <button
+            v-else
+            class="text-nepal hover:text-oxford-blue"
+            @click="open"
+          >
+            <font-awesome-icon
+              icon="file-archive"
+              size="lg"
+            />
           </button>
         </td>
-        <td class="py-3 px-4 border-b border-ebony-clay">{{ subtitle.language }}</td>
-        <td class="py-3 px-4 border-b border-ebony-clay">{{ subtitle.author }}</td>
-        <td class="py-3 px-4 border-b border-ebony-clay">{{ subtitle.downloadCount }}</td>
+        <td v-text="subtitle.language"></td>
+        <td v-text="subtitle.author"></td>
+        <td v-text="subtitle.downloadCount"></td>
       </tr>
       </tbody>
     </table>
@@ -42,26 +49,47 @@
 </template>
 
 <script>
+  import { mapGetters, mapActions } from 'vuex'
+
   export default {
     name: 'Subtitles',
 
     props: {
-      subtitles: Array,
       episode: Number
     },
 
+    data () {
+      return {
+        headers: ['Version', '', 'Language', 'Author', 'Downloaded']
+      }
+    },
+
     computed: {
+      ...mapGetters('Shows', ['seasonSubtitles']),
+
+      ...mapGetters('Subtitles', ['findSubtitle']),
+
+      season () {
+        return parseInt(this.$route.params.season)
+      },
+
+      subtitles () {
+        return this.seasonSubtitles(this.episode)
+      },
+
       subtitle () {
-        return this.$store.getters['Subtitles/subtitle'](parseInt(this.$route.params.season), this.episode)
+        return this.findSubtitle(this.season, this.episode)
       }
     },
 
     methods: {
-      download (id) {
-        this.$store.dispatch('Subtitles/download', {
+      ...mapActions('Subtitles', ['download']),
+
+      doDownload (id) {
+        this.download({
           urlId: id,
           id: parseInt(this.$route.params.id),
-          season: parseInt(this.$route.params.season),
+          season: this.season,
           episode: this.episode
         })
 
@@ -74,7 +102,7 @@
 
       exists (id) {
         if (this.subtitle) {
-          return id === this.subtitle.urlId
+          return this.subtitle.urlId === id
         }
       }
     }

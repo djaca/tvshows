@@ -22,4 +22,12 @@ body {
     @apply bg-oxford-blue border-transparent
 }
 
+table th {
+    @apply py-3 px-4 font-sans font-medium uppercase text-sm border-b border-ebony-clay
+}
+
+table td {
+    @apply py-3 px-4 border-b border-ebony-clay
+}
+
 @tailwind utilities;

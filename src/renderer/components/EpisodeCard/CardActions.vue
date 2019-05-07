@@ -88,7 +88,7 @@
       },
 
       getSubtitles () {
-        this.$emit('get-subtitles', this.episodeNumber)
+        this.$emit('get-subtitles')
       },
 
       play () {

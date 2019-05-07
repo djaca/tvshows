@@ -50,8 +50,6 @@
     },
 
     computed: {
-      ...mapGetters('Shows', ['seasonSubtitles']),
-
       ...mapGetters('Watch', ['isWatched']),
 
       episode () {
@@ -72,7 +70,7 @@
 
       image () {
         if (this.item.still_path) {
-          return {backgroundImage: `url('https://image.tmdb.org/t/p/w300${this.item.still_path}')`}
+          return { backgroundImage: `url('https://image.tmdb.org/t/p/w300${this.item.still_path}')` }
         }
       },
 
@@ -84,7 +82,6 @@
     methods: {
       getSubtitles () {
         this.$modal.show(SubtitlesModal, {
-          subtitles: this.seasonSubtitles(this.episode),
           episode: this.episode
         }, {
           height: 'auto',
