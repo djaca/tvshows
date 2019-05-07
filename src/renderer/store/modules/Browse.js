@@ -36,7 +36,7 @@ const actions = {
 
           resolve()
         })
-        .catch(err => reject(err))
+        .catch(err => (reject(err)))
     })
   },
 

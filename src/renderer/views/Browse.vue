@@ -16,7 +16,12 @@
             @click="clearSearchField"
             v-if="showClearBtn"
           >
-            Cancel
+           <span class="text-red-dark">
+              <font-awesome-icon
+                icon="times"
+                size="lg"
+              />
+           </span>
           </button>
 
           <button
@@ -26,7 +31,10 @@
             :disabled="!query"
             :class="{ 'opacity-50 cursor-not-allowed': !query }"
           >
-            Search
+            <font-awesome-icon
+              icon="search"
+              size="lg"
+            />
           </button>
         </div>
       </form>
@@ -55,7 +63,7 @@
 
 <script>
   import VTilesContainer from '@/components/VTilesContainer'
-  import { mapState, mapGetters, mapActions } from 'vuex'
+  import { mapState, mapMutations, mapGetters, mapActions } from 'vuex'
   import goTo from '@/mixins/route'
 
   export default {
@@ -74,16 +82,14 @@
 
     computed: {
       items () {
-        if (this.shows) {
-          return this.shows.map(s => {
+        return this.shows
+          ? this.shows.map(s => {
             return {
               id: s.id,
               img: s.poster_path
             }
           })
-        }
-
-        return []
+          : []
       },
 
       ...mapState('Browse', ['text', 'popular', 'results']),
@@ -96,7 +102,7 @@
         },
 
         set (value) {
-          this.$store.commit('Browse/SET_TEXT', value.trim())
+          this.SET_TEXT(value.trim())
         }
       },
 
@@ -106,15 +112,17 @@
     },
 
     methods: {
+      ...mapMutations('Browse', ['SET_TEXT']),
+
       ...mapActions('Browse', ['getPopular', 'search', 'clearSearch']),
 
       getPopularShows () {
-        this.loader = this.$loading.show()
+        let loader = this.$loading.show()
 
         this.getPopular()
           .then(() => (this.shows = this.popular))
-          .catch(err => console.log(err))
-          .finally(() => this.loader.hide())
+          .catch(err => (console.log(err)))
+          .finally(() => (loader.hide()))
       },
 
       clearSearchField () {
@@ -125,12 +133,12 @@
 
       doSearch () {
         if (this.query && this.query !== ' ') {
-          this.loader = this.$loading.show()
+          let loader = this.$loading.show()
 
           this.search()
             .then(() => (this.shows = this.results))
-            .catch(err => console.log(err))
-            .finally(() => this.loader.hide())
+            .catch(err => (console.log(err)))
+            .finally(() => (loader.hide()))
         }
       }
     },
