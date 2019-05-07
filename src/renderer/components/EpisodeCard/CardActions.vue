@@ -4,7 +4,7 @@
       v-for="(torrent, type) in availableTorrents"
       :key="type"
       class="downloadTorrentBtn"
-      @click="download(torrent)"
+      @click="doDownload(torrent)"
     >
       {{ type }}
     </button>
@@ -44,7 +44,7 @@
 
 <script>
   import SubtitlesModal from '@/components/Modals/Subtitles'
-  import { mapGetters } from 'vuex'
+  import { mapGetters, mapActions } from 'vuex'
 
   export default {
     name: 'CardActions',
@@ -74,8 +74,10 @@
     },
 
     methods: {
-      download (torrent) {
-        this.$store.dispatch('Torrent/download', {
+      ...mapActions('Torrent', ['download']),
+
+      doDownload (torrent) {
+        this.download({
           ...torrent,
           show: this.$store.getters['Shows/show'].name,
           id: this.$route.params.id,
