@@ -15,7 +15,7 @@
           :key="episode.episode_number"
         >
           <episode-card
-            :episode="episode"
+            :item="episode"
             @get-subtitles="showSubtitlesModal"
           ></episode-card>
         </div>

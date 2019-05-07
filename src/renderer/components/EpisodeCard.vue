@@ -7,15 +7,15 @@
 
     <div class="p-4 flex-1 flex flex-col text-nepal">
       <div class="mb-4">
-        <h3 class="text-2xl" v-text="episode.name"></h3>
+        <h3 class="text-2xl" v-text="item.name"></h3>
         <div class="text-xs" v-text="date"></div>
       </div>
       <div class="mb-4 text-sm flex-1">
-        <p v-text="episode.overview"></p>
+        <p v-text="item.overview"></p>
       </div>
 
       <div class="mb-1">
-        <span class="text-xs float-right">Episode {{ episodeNumber }}</span>
+        <span class="text-xs float-right">Episode {{ episode }}</span>
       </div>
 
       <div
@@ -24,7 +24,7 @@
       >
         <card-actions
           :torrents="torrents.torrents"
-          :episode="episode"
+          :episode="item"
           @get-subtitles="getSubtitles"
         />
       </div>
@@ -41,40 +41,43 @@
     components: { CardActions },
 
     props: {
-      episode: Object
+      item: {
+        required: true,
+        type: Object
+      }
     },
 
     computed: {
-      episodeNumber () {
-        return this.episode.episode_number
+      episode () {
+        return this.item.episode_number
       },
 
-      seasonNumber () {
-        return this.episode.season_number
+      season () {
+        return this.item.season_number
       },
 
       watched () {
-        return this.$store.getters['Watch/watched'](this.seasonNumber, this.episodeNumber)
+        return this.$store.getters['Watch/watched'](this.season, this.episode)
       },
 
       torrents () {
-        return this.$store.getters['Shows/torrents'](this.seasonNumber, this.episodeNumber)
+        return this.$store.getters['Shows/torrents'](this.season, this.episode)
       },
 
       image () {
-        if (this.episode.still_path) {
-          return {backgroundImage: `url('https://image.tmdb.org/t/p/w300${this.episode.still_path}')`}
+        if (this.item.still_path) {
+          return {backgroundImage: `url('https://image.tmdb.org/t/p/w300${this.item.still_path}')`}
         }
       },
 
       date () {
-        return this.humanTime(this.episode.air_date)
+        return this.humanTime(this.item.air_date)
       }
     },
 
     methods: {
       getSubtitles () {
-        this.$emit('get-subtitles', this.episodeNumber)
+        this.$emit('get-subtitles', this.episode)
       }
     }
   }
