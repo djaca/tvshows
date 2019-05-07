@@ -6,15 +6,19 @@
       v-if="show"
     ></div>
 
-    <div class="mx-2" v-if="episodes">
+    <div
+      class="mx-2"
+      v-if="episodes"
+    >
       <div class="flex flex-wrap -m-2">
-
         <div
           class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 px-3 mb-4 flex flex-col p-2"
           v-for="episode in episodes"
           :key="episode.episode_number"
         >
-          <episode-card :item="episode"></episode-card>
+          <episode-card
+            :item="episode"
+          />
         </div>
       </div>
     </div>
@@ -23,18 +27,12 @@
 
 <script>
   import EpisodeCard from '@/components/EpisodeCard'
-  import { mapGetters } from 'vuex'
+  import { mapGetters, mapActions } from 'vuex'
 
   export default {
     name: 'Season',
 
     components: { EpisodeCard },
-
-    data () {
-      return {
-        loader: null
-      }
-    },
 
     computed: {
       ...mapGetters('Shows', ['show', 'episodes']),
@@ -53,17 +51,21 @@
     },
 
     methods: {
-      getSeason () {
-        this.loader = this.$loading.show()
+      ...mapActions('Shows', ['fetchSeason']),
 
-        this.$store.dispatch('Shows/getSeason', this.season)
+      getSeason () {
+        const loader = this.$loading.show()
+
+        this.fetchSeason(this.season)
           .catch(err => console.log(err))
-          .finally(() => this.loader.hide())
+          .finally(() => loader.hide())
       }
     },
 
     mounted () {
-      this.show ? this.getSeason() : this.$router.push({ name: 'home' })
+      this.show
+        ? this.getSeason()
+        : this.$router.push({ name: 'home' })
     }
   }
 </script>

@@ -102,7 +102,7 @@ const actions = {
     })
   },
 
-  getSeason ({ commit, state }, season) {
+  fetchSeason ({ commit, state }, season) {
     commit('SET_EPISODES', [])
 
     return new Promise((resolve, reject) => {
