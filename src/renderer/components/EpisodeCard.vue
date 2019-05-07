@@ -52,6 +52,8 @@
     computed: {
       ...mapGetters('Shows', ['seasonSubtitles']),
 
+      ...mapGetters('Watch', ['isWatched']),
+
       episode () {
         return this.item.episode_number
       },
@@ -61,7 +63,7 @@
       },
 
       watched () {
-        return this.$store.getters['Watch/watched'](this.season, this.episode)
+        return this.isWatched(this.season, this.episode)
       },
 
       torrents () {
