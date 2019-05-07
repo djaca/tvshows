@@ -9,18 +9,30 @@ const getters = {
 
 const mutations = {
   ADD (state, payload) {
-    let index = state.items.findIndex(t => t.id === payload.id && t.season === payload.season && t.episode === payload.episode)
-
-    if (index !== -1) {
-      state.items.splice(index, 1)
-    }
-
     state.items.push(payload)
+  },
+
+  REMOVE (state, index) {
+    state.items.splice(index, 1)
   }
 }
 
 const actions = {
-  //
+  add ({ commit, state }, payload) {
+    let index = state.items.findIndex(t => t.id === payload.id && t.season === payload.season && t.episode === payload.episode)
+
+    if (index !== -1) {
+      commit('REMOVE', index)
+    }
+
+    commit('ADD', payload)
+  },
+
+  remove ({ commit, state }, payload) {
+    let index = state.items.findIndex(t => t.id === payload.id && t.season === payload.season && t.episode === payload.episode)
+
+    commit('REMOVE', index)
+  }
 }
 
 export default {
