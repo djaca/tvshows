@@ -23,7 +23,7 @@
         v-if="torrents"
       >
         <card-actions
-          :torrents="torrents.torrents"
+          :availableTorrents="torrents.torrents"
           :episode="item"
         />
       </div>

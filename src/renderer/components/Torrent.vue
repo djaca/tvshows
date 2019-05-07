@@ -52,6 +52,8 @@
     name: 'Torrent',
 
     computed: {
+      ...mapGetters('Torrents', ['findTorrent']),
+
       ...mapGetters('Torrent', ['selectedTorrent', 'downloading', 'fileSize', 'downloadSpeed', 'remaining']),
 
       remainingFormatted () {
@@ -60,7 +62,7 @@
 
       torrent () {
         if (this.selectedTorrent) {
-          return this.$store.getters['Torrents/torrent'](this.selectedTorrent.season, this.selectedTorrent.episode, this.selectedTorrent.id)
+          return this.findTorrent(this.selectedTorrent.season, this.selectedTorrent.episode, this.selectedTorrent.id)
         }
       },
 

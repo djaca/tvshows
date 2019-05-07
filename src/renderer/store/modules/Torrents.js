@@ -3,7 +3,7 @@ const state = {
 }
 
 const getters = {
-  torrent: (state, getters, rootState, rootGetters) => (season, episode, id = rootGetters['Shows/show'].id) =>
+  findTorrent: (state, getters, rootState, rootGetters) => (season, episode, id = rootGetters['Shows/show'].id) =>
     state.items.find(t => t.id === String(id) && t.season === season && t.episode === episode)
 }
 

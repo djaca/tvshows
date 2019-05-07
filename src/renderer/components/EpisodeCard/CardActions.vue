@@ -1,23 +1,12 @@
 <template>
   <div class="mt-2 overflow-hidden">
-    <template v-for="(torrent, type) in torrents">
-      <button
-        class="downloadTorrentBtn"
-        @click="download(torrent)"
-      >
-        {{ type }}
-      </button>
-
-    </template>
-
     <button
-      class="text-nepal hover:text-oxford-blue float-right"
-      @click="toggleWatch"
+      v-for="(torrent, type) in availableTorrents"
+      :key="type"
+      class="downloadTorrentBtn"
+      @click="download(torrent)"
     >
-      <font-awesome-icon
-        icon="eye"
-        size="lg"
-      ></font-awesome-icon>
+      {{ type }}
     </button>
 
     <button
@@ -27,18 +16,28 @@
       <font-awesome-icon
         icon="closed-captioning"
         size="lg"
-      ></font-awesome-icon>
+      />
     </button>
 
     <button
       class="downloadTorrentBtn"
-      @click="play"
       v-if="torrent"
+      @click="play"
     >
       <font-awesome-icon
         icon="play"
         size="lg"
-      ></font-awesome-icon>
+      />
+    </button>
+
+    <button
+      class="text-nepal hover:text-oxford-blue float-right"
+      @click="toggleWatch"
+    >
+      <font-awesome-icon
+        icon="eye"
+        size="lg"
+      />
     </button>
   </div>
 </template>
@@ -50,10 +49,12 @@
   export default {
     name: 'CardActions',
 
-    props: ['torrents', 'episode'],
+    props: ['availableTorrents', 'episode'],
 
     computed: {
       ...mapGetters('Subtitles', ['findSubtitle']),
+
+      ...mapGetters('Torrents', ['findTorrent']),
 
       episodeNumber () {
         return this.episode.episode_number
@@ -64,7 +65,7 @@
       },
 
       torrent () {
-        return this.$store.getters['Torrents/torrent'](this.seasonNumber, this.episodeNumber)
+        return this.findTorrent(this.seasonNumber, this.episodeNumber)
       },
 
       subtitle () {
