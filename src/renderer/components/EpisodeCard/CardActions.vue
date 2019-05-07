@@ -56,6 +56,8 @@
 
       ...mapGetters('Torrents', ['findTorrent']),
 
+      ...mapGetters('Shows', ['show']),
+
       episodeNumber () {
         return this.episode.episode_number
       },
@@ -76,10 +78,12 @@
     methods: {
       ...mapActions('Torrent', ['download']),
 
+      ...mapActions('Watch', ['toggle']),
+
       doDownload (torrent) {
         this.download({
           ...torrent,
-          show: this.$store.getters['Shows/show'].name,
+          show: this.show.name,
           id: this.$route.params.id,
           name: this.episode.name,
           season: this.seasonNumber,
@@ -88,7 +92,7 @@
       },
 
       toggleWatch () {
-        this.$store.dispatch('Watch/toggleWatch', {
+        this.toggle({
           id: this.episode.show_id,
           season: this.seasonNumber,
           episode: this.episodeNumber

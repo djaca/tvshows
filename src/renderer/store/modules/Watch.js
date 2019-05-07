@@ -31,7 +31,7 @@ const mutations = {
 }
 
 const actions = {
-  toggleWatch ({ dispatch, commit, state }, payload) {
+  toggle ({ dispatch, commit, state }, payload) {
     let index = state.data.findIndex(s => s.season === payload.season && s.id === payload.id)
 
     if (index === -1) {
