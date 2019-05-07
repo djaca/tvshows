@@ -21,7 +21,7 @@
     </button>
 
     <button
-      class="downloadTorrentBtn"
+      :class="['downloadTorrentBtn', { 'border-green': subtitle }]"
       @click="getSubtitles"
     >
       <font-awesome-icon
@@ -44,12 +44,16 @@
 </template>
 
 <script>
+  import { mapGetters } from 'vuex'
+
   export default {
     name: 'CardActions',
 
     props: ['torrents', 'episode'],
 
     computed: {
+      ...mapGetters('Subtitles', ['findSubtitle']),
+
       episodeNumber () {
         return this.episode.episode_number
       },
@@ -63,7 +67,7 @@
       },
 
       subtitle () {
-        return this.$store.getters['Subtitles/subtitle'](this.seasonNumber, this.episodeNumber)
+        return this.findSubtitle(this.seasonNumber, this.episodeNumber)
       }
     },
 
