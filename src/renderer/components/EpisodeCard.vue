@@ -25,7 +25,6 @@
         <card-actions
           :torrents="torrents.torrents"
           :episode="item"
-          @get-subtitles="getSubtitles"
         />
       </div>
     </div>
@@ -34,7 +33,6 @@
 
 <script>
   import CardActions from '@/components/EpisodeCard/CardActions'
-  import SubtitlesModal from '@/components/Modals/Subtitles'
   import { mapGetters } from 'vuex'
 
   export default {
@@ -76,17 +74,6 @@
 
       date () {
         return this.humanTime(this.item.air_date)
-      }
-    },
-
-    methods: {
-      getSubtitles () {
-        this.$modal.show(SubtitlesModal, {
-          episode: this.episode
-        }, {
-          height: 'auto',
-          width: '60%'
-        })
       }
     }
   }

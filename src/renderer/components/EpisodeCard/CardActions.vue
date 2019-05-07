@@ -44,6 +44,7 @@
 </template>
 
 <script>
+  import SubtitlesModal from '@/components/Modals/Subtitles'
   import { mapGetters } from 'vuex'
 
   export default {
@@ -92,7 +93,12 @@
       },
 
       getSubtitles () {
-        this.$emit('get-subtitles')
+        this.$modal.show(SubtitlesModal, {
+          episode: this.episodeNumber
+        }, {
+          height: 'auto',
+          width: '60%'
+        })
       },
 
       play () {
