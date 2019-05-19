@@ -10,6 +10,16 @@
     </button>
 
     <button
+      class="downloadTorrentBtn"
+      @click="getTorrents"
+    >
+      <font-awesome-icon
+        icon="magnet"
+        size="lg"
+      ></font-awesome-icon>
+    </button>
+
+    <button
       :class="['downloadTorrentBtn', { 'border-green': subtitle }]"
       @click="getSubtitles"
     >
@@ -44,6 +54,7 @@
 
 <script>
   import SubtitlesModal from '@/components/Modals/Subtitles'
+  import TorrentsModal from '@/components/Modals/Torrents'
   import { mapGetters, mapActions } from 'vuex'
 
   export default {
@@ -102,6 +113,16 @@
       getSubtitles () {
         this.$modal.show(SubtitlesModal, {
           episode: this.episodeNumber
+        }, {
+          height: 'auto',
+          width: '60%'
+        })
+      },
+
+      getTorrents () {
+        this.$modal.show(TorrentsModal, {
+          episode: this.episodeNumber,
+          episodeName: this.episode.name
         }, {
           height: 'auto',
           width: '60%'
