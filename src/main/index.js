@@ -1,6 +1,8 @@
 'use strict'
 import { app, BrowserWindow, ipcMain } from 'electron'
 import { download } from 'electron-dl'
+import fs from 'fs'
+import { downloadLink } from './../renderer/api/titlovi'
 
 /**
  * Set `__static` path to static files in production
@@ -47,32 +49,33 @@ app.on('activate', () => {
   }
 })
 
-let subtitlesFolder = `${app.getPath('downloads')}/TVShows/subtitles`
+let subtitlesDir = `${app.getPath('downloads')}/TVShows/subtitles`
 
-ipcMain.on('download-subtitle', (e, payload) => {
-  download(BrowserWindow.getFocusedWindow(), payload.url, {
-    directory: subtitlesFolder,
-    onStarted: item => {
-      // check if file exists...
-      let fs = require('fs')
+ipcMain.on('download-subtitle', (e, {id}) => {
+  let options = {
+    directory: subtitlesDir,
+    onStarted: item => handlesSubtitleExists(item)
+  }
 
-      fs.readdir(subtitlesFolder, (err, files) => {
-        if (!err) {
-          files.forEach(file => {
-            if (file === item.getFilename()) {
-              mainWindow.webContents.send('subtitle-downloaded', { ...payload, path: `${subtitlesFolder}/${file}` })
-
-              item.cancel()
-            }
-          })
-        }
-      })
-    }
-  })
+  download(BrowserWindow.getFocusedWindow(), downloadLink + id, options)
     .then(dl => {
-      mainWindow.webContents.send('subtitle-downloaded', { ...payload, path: dl.getSavePath() })
+      console.log('new', dl.getSavePath())
+      mainWindow.webContents.send('subtitle-downloaded', { path: dl.getSavePath() })
     })
     .catch(err => {
       mainWindow.webContents.send('download-subtitle-error', err)
     })
 })
+
+function handlesSubtitleExists (item) {
+  fs.readdir(subtitlesDir, (err, files) => {
+    if (!err && files.includes(item.getFilename())) {
+      item.cancel()
+
+      mainWindow.webContents.send(
+        'subtitle-downloaded',
+        { path: `${subtitlesDir}/${item.getFilename()}` }
+      )
+    }
+  })
+}

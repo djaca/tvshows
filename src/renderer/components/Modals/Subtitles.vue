@@ -67,7 +67,7 @@
     computed: {
       ...mapGetters('Shows', ['seasonSubtitles']),
 
-      ...mapGetters('Subtitles', ['findSubtitle']),
+      ...mapGetters('Subtitles', ['getSubtitleFor']),
 
       season () {
         return parseInt(this.$route.params.season)
@@ -78,7 +78,7 @@
       },
 
       subtitle () {
-        return this.findSubtitle(this.season, this.episode)
+        return this.getSubtitleFor(this.season, this.episode)
       }
     },
 
@@ -87,8 +87,8 @@
 
       doDownload (id) {
         this.download({
-          urlId: id,
-          id: parseInt(this.$route.params.id),
+          id,
+          showId: parseInt(this.$route.params.id),
           season: this.season,
           episode: this.episode
         })
@@ -102,7 +102,7 @@
 
       exists (id) {
         if (this.subtitle) {
-          return this.subtitle.urlId === id
+          return this.subtitle.id === parseInt(id)
         }
       }
     }

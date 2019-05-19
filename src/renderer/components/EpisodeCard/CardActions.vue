@@ -52,7 +52,7 @@
     props: ['availableTorrents', 'episode'],
 
     computed: {
-      ...mapGetters('Subtitles', ['findSubtitle']),
+      ...mapGetters('Subtitles', ['getSubtitleFor']),
 
       ...mapGetters('Torrents', ['findTorrent']),
 
@@ -71,7 +71,7 @@
       },
 
       subtitle () {
-        return this.findSubtitle(this.seasonNumber, this.episodeNumber)
+        return this.getSubtitleFor(this.seasonNumber, this.episodeNumber)
       }
     },
 

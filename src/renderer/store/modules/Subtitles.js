@@ -1,57 +1,40 @@
 import { ipcRenderer } from 'electron'
-import { downloadLink } from '@/api/titlovi'
 
 const state = {
   data: []
 }
 
 const getters = {
-  findSubtitle: (state, getters, rootState, rootGetters) => (season, episode, id = rootGetters['Shows/show'].id) =>
-    state.data.find(s => s.id === parseInt(id) && s.season === season && s.episode === episode)
+  getSubtitleFor: (state, getters, rootState, rootGetters) => (season, episode, id = rootGetters['Shows/show'].id) =>
+    state.data.find(s => s.showId === parseInt(id) && s.season === season && s.episode === episode)
 }
 
 const mutations = {
   ADD (state, payload) {
-    let index = state.data.findIndex(t => {
-      return t.id === payload.id && t.season === payload.season && t.episode === payload.episode
-    })
-
-    if (index !== -1) {
-      state.data.splice(index, 1)
-    }
-
     state.data.push(payload)
   },
 
-  REMOVE (state, { id, season, episode }) {
-    let index = state.data.findIndex(t => t.id === id && t.season === season && t.episode === episode)
-
-    if (index !== -1) {
-      state.data.splice(index, 1)
-    }
+  REMOVE (state, index) {
+    state.data.splice(index, 1)
   }
 }
 
 const actions = {
-  add ({ commit }, payload) {
-    commit('ADD', payload)
+  remove ({ state, commit }, { showId, season, episode }) {
+    let index = state.data.findIndex(s => s.showId === showId && s.season === season && s.episode === episode)
+
+    if (index !== -1) {
+      commit('REMOVE', index)
+    }
   },
 
-  remove ({ commit }, payload) {
-    commit('REMOVE', payload)
-  },
+  download ({ commit, dispatch }, { id, season, episode, showId }) {
+    ipcRenderer.send('download-subtitle', { id })
 
-  download ({ commit, dispatch }, { id, season, episode, urlId }) {
-    ipcRenderer.send('download-subtitle', {
-      id,
-      season,
-      episode,
-      url: downloadLink + urlId
-    })
+    ipcRenderer.once('subtitle-downloaded', (event, { path }) => {
+      dispatch('remove', { showId, season, episode })
 
-    ipcRenderer.on('subtitle-downloaded', (event, payload) => {
-      // todo: handle file path
-      dispatch('add', { ...payload, urlId })
+      commit('ADD', { id: parseInt(id), season, episode, showId, path })
     })
 
     ipcRenderer.on('download-subtitle-error', (event, err) => {
