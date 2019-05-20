@@ -4,9 +4,19 @@
       v-for="(torrent, type) in availableTorrents"
       :key="type"
       class="downloadTorrentBtn"
-      @click="doDownload(torrent)"
+      @click="doDownload(torrent.url)"
     >
       {{ type }}
+    </button>
+
+    <button
+      class="downloadTorrentBtn"
+      @click="getTorrents"
+    >
+      <font-awesome-icon
+        icon="magnet"
+        size="lg"
+      ></font-awesome-icon>
     </button>
 
     <button
@@ -44,6 +54,7 @@
 
 <script>
   import SubtitlesModal from '@/components/Modals/Subtitles'
+  import TorrentsModal from '@/components/Modals/Torrents'
   import { mapGetters, mapActions } from 'vuex'
 
   export default {
@@ -67,7 +78,7 @@
       },
 
       torrent () {
-        return this.findTorrent(this.seasonNumber, this.episodeNumber)
+        return this.findTorrent(this.episode.id)
       },
 
       subtitle () {
@@ -80,14 +91,15 @@
 
       ...mapActions('Watch', ['toggle']),
 
-      doDownload (torrent) {
+      doDownload (magnet) {
         this.download({
-          ...torrent,
-          show: this.show.name,
-          id: this.$route.params.id,
-          name: this.episode.name,
+          id: this.episode.id,
+          showId: this.show.id,
+          showName: this.show.name,
+          episodeName: this.episode.name,
           season: this.seasonNumber,
-          episode: this.episodeNumber
+          episode: this.episodeNumber,
+          magnet
         })
       },
 
@@ -102,6 +114,15 @@
       getSubtitles () {
         this.$modal.show(SubtitlesModal, {
           episode: this.episodeNumber
+        }, {
+          height: 'auto',
+          width: '60%'
+        })
+      },
+
+      getTorrents () {
+        this.$modal.show(TorrentsModal, {
+          episode: this.episode
         }, {
           height: 'auto',
           width: '60%'

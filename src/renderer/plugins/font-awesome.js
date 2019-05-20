@@ -12,9 +12,10 @@ import {
   faHdd,
   faLongArrowAltDown,
   faTimes,
-  faPlay
+  faPlay,
+  faMagnet
 } from '@fortawesome/free-solid-svg-icons'
 
-library.add(faDownload, faEye, faClosedCaptioning, faFileArchive, faSearch, faArrowLeft, faPlus, faMinus, faHdd, faLongArrowAltDown, faTimes, faPlay)
+library.add(faDownload, faEye, faClosedCaptioning, faFileArchive, faSearch, faArrowLeft, faPlus, faMinus, faHdd, faLongArrowAltDown, faTimes, faPlay, faMagnet)
 
 export default FontAwesomeIcon

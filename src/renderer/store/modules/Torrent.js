@@ -1,24 +1,9 @@
 import torrentStream from 'torrent-stream'
+import { formatBytes } from '@/utilities'
 const { app } = require('electron').remote
 
 let engine = null
 let timer = null
-
-function formatBytes (a, round = false) {
-  if (a === 0) {
-    return '0 Bytes'
-  }
-  let c = 1024
-  let d = 2
-  let e = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
-  let f = Math.floor(Math.log(a) / Math.log(c))
-
-  if (round) {
-    return Math.floor(parseFloat((a / Math.pow(c, f)).toFixed(d))) + ' ' + e[f]
-  }
-
-  return parseFloat((a / Math.pow(c, f)).toFixed(d)) + ' ' + e[f]
-}
 
 const state = {
   torrent: null,
@@ -65,7 +50,7 @@ const actions = {
         commit('SET_TORRENT', torrent)
       })
 
-    engine = torrentStream(torrent.url, {path: `${app.getPath('downloads')}/TVShows`})
+    engine = torrentStream(torrent.magnet, { path: `${app.getPath('downloads')}/TVShows` })
 
     engine.on('ready', () => {
       const file = engine.files[0]
@@ -79,11 +64,8 @@ const actions = {
       }, 1000)
 
       dispatch('Torrents/add', {
-        id: torrent.id,
-        season: torrent.season,
-        episode: torrent.episode,
-        path: `${app.getPath('downloads')}/TVShows/${file.path}`,
-        name: file.name
+        ...torrent,
+        path: `${app.getPath('downloads')}/TVShows/${file.path}`
       }, { root: true })
     })
 
@@ -94,12 +76,8 @@ const actions = {
     })
   },
 
-  cancel ({ state, dispatch }) {
-    dispatch('Torrents/remove', {
-      id: state.torrent.id,
-      season: state.torrent.season,
-      episode: state.torrent.episode
-    }, { root: true })
+  async cancel ({ state, dispatch }) {
+    await dispatch('Torrents/remove', { id: state.torrent.id }, { root: true })
 
     dispatch('clear')
   },

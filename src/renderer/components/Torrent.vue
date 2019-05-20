@@ -10,7 +10,7 @@
           class="flex-1 grow"
           v-if="selectedTorrent"
         >
-          <div class="text-lg">{{ selectedTorrent.show }} - {{ selectedTorrent.name }}
+          <div class="text-lg">{{ selectedTorrent.showName }} - {{ selectedTorrent.episodeName }}
           </div>
           <div class="text-xs">
             <div>Season {{ selectedTorrent.season }}</div>
@@ -97,7 +97,7 @@
 
       torrent () {
         if (this.selectedTorrent) {
-          return this.findTorrent(this.selectedTorrent.season, this.selectedTorrent.episode, this.selectedTorrent.id)
+          return this.findTorrent(this.selectedTorrent.id)
         }
       },
 

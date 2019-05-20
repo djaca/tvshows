@@ -3,8 +3,7 @@ const state = {
 }
 
 const getters = {
-  findTorrent: (state, getters, rootState, rootGetters) => (season, episode, id = rootGetters['Shows/show'].id) =>
-    state.items.find(t => t.id === id && t.season === season && t.episode === episode)
+  findTorrent: state => id => state.items.find(i => i.id === id)
 }
 
 const mutations = {
@@ -18,20 +17,22 @@ const mutations = {
 }
 
 const actions = {
-  add ({ commit, state }, payload) {
-    let index = state.items.findIndex(t => t.id === payload.id && t.season === payload.season && t.episode === payload.episode)
-
-    if (index !== -1) {
-      commit('REMOVE', index)
-    }
+  async add ({ commit, state, dispatch }, payload) {
+    await dispatch('remove', payload)
 
     commit('ADD', payload)
   },
 
   remove ({ commit, state }, payload) {
-    let index = state.items.findIndex(t => t.id === payload.id && t.season === payload.season && t.episode === payload.episode)
+    return new Promise(resolve => {
+      let index = state.items.findIndex(t => t.id === payload.id)
 
-    commit('REMOVE', index)
+      if (index !== -1) {
+        commit('REMOVE', index)
+      }
+
+      resolve()
+    })
   }
 }
 
