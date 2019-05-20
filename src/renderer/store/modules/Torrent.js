@@ -76,12 +76,8 @@ const actions = {
     })
   },
 
-  cancel ({ state, dispatch }) {
-    dispatch('Torrents/remove', {
-      id: state.torrent.id,
-      season: state.torrent.season,
-      episode: state.torrent.episode
-    }, { root: true })
+  async cancel ({ state, dispatch }) {
+    await dispatch('Torrents/remove', { id: state.torrent.id }, { root: true })
 
     dispatch('clear')
   },
