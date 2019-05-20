@@ -4,7 +4,7 @@
       v-for="(torrent, type) in availableTorrents"
       :key="type"
       class="downloadTorrentBtn"
-      @click="doDownload(torrent)"
+      @click="doDownload(torrent.url)"
     >
       {{ type }}
     </button>
@@ -78,7 +78,7 @@
       },
 
       torrent () {
-        return this.findTorrent(this.seasonNumber, this.episodeNumber)
+        return this.findTorrent(this.episode.id)
       },
 
       subtitle () {
@@ -91,14 +91,15 @@
 
       ...mapActions('Watch', ['toggle']),
 
-      doDownload (torrent) {
+      doDownload (magnet) {
         this.download({
-          ...torrent,
-          show: this.show.name,
-          id: this.$route.params.id,
-          name: this.episode.name,
+          id: this.episode.id,
+          showId: this.show.id,
+          showName: this.show.name,
+          episodeName: this.episode.name,
           season: this.seasonNumber,
-          episode: this.episodeNumber
+          episode: this.episodeNumber,
+          magnet
         })
       },
 
@@ -121,8 +122,7 @@
 
       getTorrents () {
         this.$modal.show(TorrentsModal, {
-          episode: this.episodeNumber,
-          episodeName: this.episode.name
+          episode: this.episode
         }, {
           height: 'auto',
           width: '60%'

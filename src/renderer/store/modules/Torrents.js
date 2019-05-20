@@ -3,8 +3,7 @@ const state = {
 }
 
 const getters = {
-  findTorrent: (state, getters, rootState, rootGetters) => (season, episode, id = rootGetters['Shows/show'].id) =>
-    state.items.find(t => t.id === id && t.season === season && t.episode === episode)
+  findTorrent: state => id => state.items.find(i => i.id === id)
 }
 
 const mutations = {

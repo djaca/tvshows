@@ -50,7 +50,7 @@ const actions = {
         commit('SET_TORRENT', torrent)
       })
 
-    engine = torrentStream(torrent.url, {path: `${app.getPath('downloads')}/TVShows`})
+    engine = torrentStream(torrent.magnet, { path: `${app.getPath('downloads')}/TVShows` })
 
     engine.on('ready', () => {
       const file = engine.files[0]
@@ -64,11 +64,8 @@ const actions = {
       }, 1000)
 
       dispatch('Torrents/add', {
-        id: torrent.id,
-        season: torrent.season,
-        episode: torrent.episode,
-        path: `${app.getPath('downloads')}/TVShows/${file.path}`,
-        name: file.name
+        ...torrent,
+        path: `${app.getPath('downloads')}/TVShows/${file.path}`
       }, { root: true })
     })
 

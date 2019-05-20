@@ -37,12 +37,12 @@
 
 <script>
   import { searchTorrents } from '@/api/thePirateBay'
-  import { mapGetters } from 'vuex'
+  import { mapGetters, mapActions } from 'vuex'
 
   export default {
     name: 'Torrents',
 
-    props: ['episode', 'episodeName'],
+    props: ['episode'],
 
     data () {
       return {
@@ -52,41 +52,38 @@
     },
 
     computed: {
-      ...mapGetters('Shows', ['show'])
+      ...mapGetters('Shows', ['show']),
+
+      query () {
+        let name = this.show.name
+        let season = `S${this.episode.season_number <= 9 ? '0' : ''}${this.episode.season_number}`
+        let episode = `E${this.episode.episode_number <= 9 ? '0' : ''}${this.episode.episode_number}`
+
+        return `${name} ${season}${episode}`
+      }
     },
 
     methods: {
-      queryForTorrentSearch () {
-        let season = this.$route.params.season
-        let episode = this.episode
-
-        return `${this.show.name} S${season <= 9 ? '0' : ''}${season}E${episode <= 9 ? '0' : ''}${episode}`
-      },
+      ...mapActions('Torrent', ['download']),
 
       getTorrents () {
-        searchTorrents(this.queryForTorrentSearch())
-          .then(resp => {
-            this.torrents = resp
+        searchTorrents(this.query)
+          .then(data => {
+            this.torrents = data
           })
           .catch(e => console.log(e))
       },
 
-      doDownload (torrent) {
-        let data = {
-          seeders: torrent.seeders,
-          leechers: torrent.leechers,
-          magnet: torrent.magnet,
+      doDownload ({ magnet }) {
+        this.download({
+          id: this.episode.id,
+          showId: this.show.id,
           showName: this.show.name,
-          episodeName: this.episodeName
-        }
-
-        console.log(data)
-        // ...torrent,
-        // episode: this.episodeNumber,
-        //   season: this.seasonNumber,
-        //   id: this.showId,
-        //   name: this.episode.name,
-        //   show: this.show.name
+          episodeName: this.episode.name,
+          season: this.episode.season_number,
+          episode: this.episode.episode_number,
+          magnet: magnet
+        })
       }
     },
 
