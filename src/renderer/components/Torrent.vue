@@ -89,7 +89,7 @@
 
       ...mapGetters('Torrent', ['selectedTorrent', 'downloading', 'fileSize', 'downloadSpeed', 'remaining']),
 
-      ...mapGetters('Subtitles', ['getSubtitleFor']),
+      ...mapGetters('Subtitles', ['findSubtitleByEpisodeId']),
 
       remainingFormatted () {
         return `${this.remaining}%`
@@ -102,7 +102,7 @@
       },
 
       subtitle () {
-        return this.getSubtitleFor(this.selectedTorrent.season, this.selectedTorrent.episode, this.selectedTorrent.id)
+        return this.findSubtitleByEpisodeId(this.selectedTorrent.id)
       }
     },
 

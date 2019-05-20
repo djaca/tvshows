@@ -63,7 +63,7 @@
     props: ['availableTorrents', 'episode'],
 
     computed: {
-      ...mapGetters('Subtitles', ['getSubtitleFor']),
+      ...mapGetters('Subtitles', ['findSubtitleByEpisodeId']),
 
       ...mapGetters('Torrents', ['findTorrent']),
 
@@ -82,7 +82,7 @@
       },
 
       subtitle () {
-        return this.getSubtitleFor(this.seasonNumber, this.episodeNumber)
+        return this.findSubtitleByEpisodeId(this.episode.id)
       }
     },
 
@@ -113,7 +113,8 @@
 
       getSubtitles () {
         this.$modal.show(SubtitlesModal, {
-          episode: this.episodeNumber
+          episodeId: this.episode.id,
+          episodeNumber: this.episode.episode_number
         }, {
           height: 'auto',
           width: '60%'

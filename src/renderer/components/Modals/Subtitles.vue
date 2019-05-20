@@ -54,9 +54,7 @@
   export default {
     name: 'Subtitles',
 
-    props: {
-      episode: Number
-    },
+    props: ['episodeId', 'episodeNumber'],
 
     data () {
       return {
@@ -67,30 +65,24 @@
     computed: {
       ...mapGetters('Shows', ['seasonSubtitles']),
 
-      ...mapGetters('Subtitles', ['getSubtitleFor']),
-
-      season () {
-        return parseInt(this.$route.params.season)
-      },
+      ...mapGetters('Subtitles', ['findSubtitleByEpisodeId']),
 
       subtitles () {
-        return this.seasonSubtitles(this.episode)
+        return this.seasonSubtitles(this.episodeNumber)
       },
 
       subtitle () {
-        return this.getSubtitleFor(this.season, this.episode)
+        return this.findSubtitleByEpisodeId(this.episodeId)
       }
     },
 
     methods: {
       ...mapActions('Subtitles', ['download']),
 
-      doDownload (id) {
+      doDownload (urlId) {
         this.download({
-          id,
-          showId: parseInt(this.$route.params.id),
-          season: this.season,
-          episode: this.episode
+          id: this.episodeId,
+          urlId
         })
 
         this.$emit('close')
@@ -102,7 +94,7 @@
 
       exists (id) {
         if (this.subtitle) {
-          return this.subtitle.id === parseInt(id)
+          return this.subtitle.id === id
         }
       }
     }

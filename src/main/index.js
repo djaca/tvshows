@@ -51,21 +51,24 @@ app.on('activate', () => {
 
 let subtitlesDir = `${app.getPath('downloads')}/TVShows/subtitles`
 
-ipcMain.on('download-subtitle', (e, {id}) => {
+ipcMain.on('download-subtitle', async (e, { urlId }) => {
+  await downloadSubtitle(urlId)
+})
+
+async function downloadSubtitle (urlId) {
   let options = {
     directory: subtitlesDir,
     onStarted: item => handlesSubtitleExists(item)
   }
 
-  download(BrowserWindow.getFocusedWindow(), downloadLink + id, options)
-    .then(dl => {
-      console.log('new', dl.getSavePath())
-      mainWindow.webContents.send('subtitle-downloaded', { path: dl.getSavePath() })
-    })
-    .catch(err => {
-      mainWindow.webContents.send('download-subtitle-error', err)
-    })
-})
+  try {
+    const dl = await download(BrowserWindow.getFocusedWindow(), downloadLink + urlId, options)
+
+    mainWindow.webContents.send('subtitle-downloaded', {path: dl.getSavePath()})
+  } catch (err) {
+    mainWindow.webContents.send('download-subtitle-error', err)
+  }
+}
 
 function handlesSubtitleExists (item) {
   fs.readdir(subtitlesDir, (err, files) => {

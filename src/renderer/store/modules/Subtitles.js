@@ -5,8 +5,7 @@ const state = {
 }
 
 const getters = {
-  getSubtitleFor: (state, getters, rootState, rootGetters) => (season, episode, id = rootGetters['Shows/show'].id) =>
-    state.data.find(s => s.showId === parseInt(id) && s.season === season && s.episode === episode)
+  findSubtitleByEpisodeId: state => id => state.data.find(s => s.episodeId === id)
 }
 
 const mutations = {
@@ -20,21 +19,21 @@ const mutations = {
 }
 
 const actions = {
-  remove ({ state, commit }, { showId, season, episode }) {
-    let index = state.data.findIndex(s => s.showId === showId && s.season === season && s.episode === episode)
+  remove ({ state, commit }, id) {
+    let index = state.data.findIndex(s => s.episodeId === id)
 
     if (index !== -1) {
       commit('REMOVE', index)
     }
   },
 
-  download ({ commit, dispatch }, { id, season, episode, showId }) {
-    ipcRenderer.send('download-subtitle', { id })
+  download ({ commit, dispatch }, { id, urlId }) {
+    ipcRenderer.send('download-subtitle', { urlId })
 
     ipcRenderer.once('subtitle-downloaded', (event, { path }) => {
-      dispatch('remove', { showId, season, episode })
+      dispatch('remove', id)
 
-      commit('ADD', { id: parseInt(id), season, episode, showId, path })
+      commit('ADD', { id: urlId, episodeId: id, path })
     })
 
     ipcRenderer.on('download-subtitle-error', (event, err) => {
