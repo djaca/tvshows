@@ -76,10 +76,14 @@ const actions = {
     })
   },
 
-  async cancel ({ state, dispatch }) {
-    await dispatch('Torrents/remove', { id: state.torrent.id }, { root: true })
+  cancel ({ state, dispatch }) {
+    return new Promise(async resolve => {
+      await dispatch('Torrents/remove', { id: state.torrent.id }, { root: true })
 
-    dispatch('clear')
+      dispatch('clear')
+
+      resolve()
+    })
   },
 
   clear ({ commit }) {

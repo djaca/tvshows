@@ -1,3 +1,5 @@
+@import "~@deveodk/vue-toastr/dist/@deveodk/vue-toastr.css";
+
 @tailwind preflight;
 
 @tailwind components;

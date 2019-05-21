@@ -57,7 +57,11 @@
         const loader = this.$loading.show()
 
         this.fetchSeason(this.season)
-          .catch(err => console.log(err))
+          .catch(err => {
+            this.$toastr('error', 'Can`t get episodes', 'Error')
+
+            console.log(err)
+          })
           .finally(() => loader.hide())
       }
     },

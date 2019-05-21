@@ -52,7 +52,11 @@
         let loader = this.$loading.show()
 
         this.fetchShow(this.id)
-          .catch(err => (console.log(err)))
+          .catch(err => {
+            this.$toastr('error', 'Can`t connect to TMDb', 'Error')
+
+            console.log(err)
+          })
           .finally(() => (loader.hide()))
       }
     },

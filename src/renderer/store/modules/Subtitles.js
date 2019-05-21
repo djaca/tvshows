@@ -28,16 +28,20 @@ const actions = {
   },
 
   download ({ commit, dispatch }, { id, urlId }) {
-    ipcRenderer.send('download-subtitle', { urlId })
+    return new Promise((resolve, reject) => {
+      ipcRenderer.send('download-subtitle', { urlId })
 
-    ipcRenderer.once('subtitle-downloaded', (event, { path }) => {
-      dispatch('remove', id)
+      ipcRenderer.once('subtitle-downloaded', (event, { path }) => {
+        dispatch('remove', id)
 
-      commit('ADD', { id: urlId, episodeId: id, path })
-    })
+        commit('ADD', { id: urlId, episodeId: id, path })
 
-    ipcRenderer.on('download-subtitle-error', (event, err) => {
-      console.log(err)
+        resolve()
+      })
+
+      ipcRenderer.on('download-subtitle-error', (event, err) => {
+        reject(err)
+      })
     })
   }
 }

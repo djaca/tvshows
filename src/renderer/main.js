@@ -9,6 +9,13 @@ import { DateTime } from 'luxon'
 import Loading from 'vue-loading-overlay'
 import 'vue-loading-overlay/dist/vue-loading.css'
 import FontAwesomeIcon from '@/plugins/font-awesome'
+import VueToastr from '@deveodk/vue-toastr'
+
+Vue.use(VueToastr, {
+  defaultPosition: 'toast-top-right',
+  defaultTimeout: 3000,
+  closeOnHover: false
+})
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.use(VModal, { dynamic: true, injectModalsContainer: true })

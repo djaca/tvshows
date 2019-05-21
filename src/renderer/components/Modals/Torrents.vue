@@ -71,7 +71,11 @@
           .then(data => {
             this.torrents = data
           })
-          .catch(e => console.log(e))
+          .catch(err => {
+            this.$toastr('error', 'Can`t fetch torrents', 'Error')
+
+            console.log(err)
+          })
       },
 
       doDownload ({ magnet }) {

@@ -107,8 +107,10 @@
     },
 
     methods: {
-      cancel () {
-        this.$store.dispatch('Torrent/cancel')
+      async cancel () {
+        await this.$store.dispatch('Torrent/cancel')
+
+        this.$toastr('info', 'Torrent download canceled', 'Info')
       },
 
       play () {
@@ -122,7 +124,7 @@
 
     beforeDestroy () {
       if (this.downloading) {
-        this.cancel()
+        this.$store.dispatch('Torrent/cancel')
       }
     }
   }
