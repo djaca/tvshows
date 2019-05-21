@@ -12,7 +12,7 @@
     >
       <div class="flex flex-wrap -m-2">
         <div
-          class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 px-3 mb-4 flex flex-col p-2"
+          class="w-full xl:w-1/5 px-3 mb-4 flex flex-col p-2"
           v-for="episode in episodes"
           :key="episode.episode_number"
         >
