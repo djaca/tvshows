@@ -15,7 +15,7 @@ const state = {
 const getters = {
   shows: state => [...state.items].sort((a, b) => new Date(b.created_at) - new Date(a.created_at)),
 
-  exists: (state) => id => state.items.some(show => show.id === id),
+  exists: state => id => state.items.some(show => show.id === id),
 
   show: state => state.current,
 

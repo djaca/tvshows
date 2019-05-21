@@ -25,23 +25,24 @@
         <span v-text="status"></span>
       </div>
 
-      <div v-text="show.overview"></div>
+      <div v-text="overview"></div>
     </div>
 
     <div>
       <button
         class="text-blue"
-        @click="add"
-        v-if="!exists"
+        @click="addShow"
+        v-if="!exists(show.id)"
       >
         <font-awesome-icon
           icon="plus"
           size="2x"
         />
       </button>
+
       <button
         class="text-red"
-        @click="remove(show.id)"
+        @click="removeShow(show.id)"
         v-else
       >
         <font-awesome-icon
@@ -59,14 +60,14 @@
     name: 'Heading',
 
     computed: {
-      ...mapGetters('Shows', ['show']),
+      ...mapGetters('Shows', ['show', 'exists']),
 
       name () {
         return this.show.name
       },
 
       genre () {
-        return this.show.genres.map(elem => elem.name).join(' | ')
+        return this.show.genres.map(genre => genre.name).join(' | ')
       },
 
       date () {
@@ -85,8 +86,8 @@
         return this.show.status
       },
 
-      exists () {
-        return this.$store.getters['Shows/exists'](this.show.id)
+      overview () {
+        return this.show.overview
       },
 
       img () {
@@ -95,7 +96,19 @@
     },
 
     methods: {
-      ...mapActions('Shows', ['add', 'remove'])
+      ...mapActions('Shows', ['add', 'remove']),
+
+      addShow () {
+        this.add()
+
+        this.$toastr('info', 'Show added to library')
+      },
+
+      removeShow (id) {
+        this.remove(id)
+
+        this.$toastr('info', 'Show removed from library')
+      }
     }
   }
 </script>
