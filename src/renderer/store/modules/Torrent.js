@@ -53,6 +53,10 @@ const actions = {
     engine = torrentStream(torrent.magnet, { path: `${app.getPath('downloads')}/TVShows` })
 
     engine.on('ready', () => {
+      if (!engine) {
+        return
+      }
+
       const file = engine.files[0]
 
       file.createReadStream()
@@ -70,8 +74,6 @@ const actions = {
     })
 
     engine.on('idle', () => {
-      console.log('idle')
-
       dispatch('clear')
     })
   },
