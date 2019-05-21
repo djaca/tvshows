@@ -28,31 +28,35 @@ const mutations = {
 }
 
 const actions = {
-  getPopular ({commit, state}) {
-    return new Promise((resolve, reject) => {
-      getPopularShows(state.page)
-        .then(({results}) => {
-          commit('SET', results)
+  getPopular ({ commit, state }) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        let { results } = await getPopularShows(state.page)
 
-          resolve()
-        })
-        .catch(err => (reject(err)))
+        commit('SET', results)
+
+        resolve()
+      } catch (err) {
+        reject(err)
+      }
     })
   },
 
-  search ({commit, state}) {
-    return new Promise((resolve, reject) => {
-      search(state.text)
-        .then(({results}) => {
-          commit('SET_RESULTS', results)
+  search ({ commit, state }) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        let { results } = await search(state.text)
 
-          resolve()
-        })
-        .catch(err => reject(err))
+        commit('SET_RESULTS', results)
+
+        resolve()
+      } catch (err) {
+        reject(err)
+      }
     })
   },
 
-  clearSearch ({commit}) {
+  clearSearch ({ commit }) {
     commit('SET_TEXT', null)
 
     commit('SET_RESULTS', null)

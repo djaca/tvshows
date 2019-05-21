@@ -116,38 +116,44 @@
 
       ...mapActions('Browse', ['getPopular', 'search', 'clearSearch']),
 
-      getPopularShows () {
+      async getPopularShows () {
         let loader = this.$loading.show()
 
-        this.getPopular()
-          .then(() => (this.shows = this.popular))
-          .catch(err => {
-            this.$toastr('error', 'Can`t connect to TMDb', 'Error')
+        try {
+          await this.getPopular()
+
+          this.shows = this.popular
+        } catch (err) {
+          this.$toastr('error', 'Can`t connect to TMDb', 'Error')
+
+          console.log(err)
+        }
+
+        loader.hide()
+      },
+
+      async doSearch () {
+        if (this.query && this.query !== ' ') {
+          let loader = this.$loading.show()
+
+          try {
+            await this.search()
+
+            this.shows = this.results
+          } catch (err) {
+            this.$toastr('error', 'Can`t search TMDb', 'Error')
 
             console.log(err)
-          })
-          .finally(() => (loader.hide()))
+          }
+
+          loader.hide()
+        }
       },
 
       clearSearchField () {
         this.clearSearch()
 
         this.shows = this.popular
-      },
-
-      doSearch () {
-        if (this.query && this.query !== ' ') {
-          let loader = this.$loading.show()
-
-          this.search()
-            .then(() => (this.shows = this.results))
-            .catch(err => {
-              this.$toastr('error', 'Can`t search TMDb', 'Error')
-
-              console.log(err)
-            })
-            .finally(() => (loader.hide()))
-        }
       }
     },
 
