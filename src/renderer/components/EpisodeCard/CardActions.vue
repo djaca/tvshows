@@ -39,16 +39,6 @@
         size="lg"
       />
     </button>
-
-    <button
-      class="text-nepal hover:text-oxford-blue float-right"
-      @click="toggleWatch"
-    >
-      <font-awesome-icon
-        icon="eye"
-        size="lg"
-      />
-    </button>
   </div>
 </template>
 
@@ -89,8 +79,6 @@
     methods: {
       ...mapActions('Torrent', ['download']),
 
-      ...mapActions('Watch', ['toggle']),
-
       doDownload (magnet) {
         this.download({
           id: this.episode.id,
@@ -100,14 +88,6 @@
           season: this.seasonNumber,
           episode: this.episodeNumber,
           magnet
-        })
-      },
-
-      toggleWatch () {
-        this.toggle({
-          id: this.episode.show_id,
-          season: this.seasonNumber,
-          episode: this.episodeNumber
         })
       },
 

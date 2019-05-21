@@ -3,7 +3,17 @@
     class="bg-ebony-clay rounded-lg shadow-md overflow-hidden flex-1 flex flex-col"
     :class="{'opacity-25': watched}"
   >
-    <div class="bg-cover h-48" :style="image"></div>
+    <div class="bg-cover h-48" :style="image">
+      <button
+        class="text-nepal hover:text-oxford-blue float-right mr-2 mt-2"
+        @click="toggleWatch"
+      >
+        <font-awesome-icon
+          icon="eye"
+          size="lg"
+        />
+      </button>
+    </div>
 
     <div class="p-4 flex-1 flex flex-col text-nepal">
       <div class="mb-4">
@@ -33,7 +43,7 @@
 
 <script>
   import CardActions from '@/components/EpisodeCard/CardActions'
-  import { mapGetters } from 'vuex'
+  import { mapGetters, mapActions } from 'vuex'
 
   export default {
     name: 'episode-card',
@@ -74,6 +84,18 @@
 
       date () {
         return this.humanTime(this.item.air_date)
+      }
+    },
+
+    methods: {
+      ...mapActions('Watch', ['toggle']),
+
+      toggleWatch () {
+        this.toggle({
+          id: this.item.show_id,
+          season: this.season,
+          episode: this.episode
+        })
       }
     }
   }
