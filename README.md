@@ -8,11 +8,6 @@
 # install dependencies
 yarn
 
-# copy .env.example
-cp .env.example .env
-
-# add tmdb key
-
 # serve with hot reload at localhost:9080
 yarn run dev
 
