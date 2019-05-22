@@ -66,7 +66,7 @@
       >
         <button
           class="hover:text-grey"
-          @click="cancel"
+          @click="cancelDownloading"
         >
           <font-awesome-icon
             icon="times"
@@ -79,7 +79,7 @@
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
+  import { mapGetters, mapActions } from 'vuex'
 
   export default {
     name: 'Torrent',
@@ -107,24 +107,30 @@
     },
 
     methods: {
-      async cancel () {
-        await this.$store.dispatch('Torrent/cancel')
+      ...mapActions('Torrent', ['cancel']),
+
+      async cancelDownloading () {
+        await this.cancel()
 
         this.$toastr('info', 'Torrent download canceled', 'Info')
       },
 
       play () {
         if (this.subtitle) {
-          this.$electron.shell.openItem(this.subtitle.path)
+          this.open(this.subtitle.path)
         }
 
-        this.$electron.shell.openItem(this.torrent.path)
+        this.open(this.torrent.path)
+      },
+
+      open (item) {
+        this.$electron.shell.openItem(item)
       }
     },
 
     beforeDestroy () {
       if (this.downloading) {
-        this.$store.dispatch('Torrent/cancel')
+        this.cancel()
       }
     }
   }
