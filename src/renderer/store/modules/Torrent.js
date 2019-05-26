@@ -57,7 +57,7 @@ const actions = {
         return
       }
 
-      const file = engine.files[0]
+      const file = engine.files.sort((a, b) => b.length - a.length)[0]
 
       file.createReadStream()
 
