@@ -97,7 +97,8 @@
           episodeNumber: this.episode.episode_number
         }, {
           height: 'auto',
-          width: '60%'
+          width: '60%',
+          scrollable: true
         })
       },
 
