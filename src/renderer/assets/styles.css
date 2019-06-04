@@ -1,6 +1,6 @@
 @import "~@deveodk/vue-toastr/dist/@deveodk/vue-toastr.css";
 
-@tailwind preflight;
+@tailwind base;
 
 @tailwind components;
 
@@ -16,11 +16,11 @@ body {
     overflow-x: hidden;
 }
 
-.downloadTorrentBtn {
+.button {
     @apply bg-transparent mr-1 text-xs text-nepal font-semibold py-1 px-2 rounded-full border border-nepal rounded-full
 }
 
-.downloadTorrentBtn:hover {
+.button:hover {
     @apply bg-oxford-blue border-transparent
 }
 

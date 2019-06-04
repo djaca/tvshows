@@ -3,14 +3,14 @@
     <button
       v-for="(torrent, type) in availableTorrents"
       :key="type"
-      class="downloadTorrentBtn"
+      class="button"
       @click="doDownload(torrent.url)"
     >
       {{ type }}
     </button>
 
     <button
-      class="downloadTorrentBtn"
+      class="button"
       @click="getTorrents"
     >
       <font-awesome-icon
@@ -20,7 +20,7 @@
     </button>
 
     <button
-      :class="['downloadTorrentBtn', { 'border-green': subtitle }]"
+      :class="['button', { 'border-green-500': subtitle }]"
       @click="getSubtitles"
     >
       <font-awesome-icon
@@ -30,7 +30,7 @@
     </button>
 
     <button
-      class="downloadTorrentBtn"
+      class="button"
       v-if="torrent"
       @click="play"
     >

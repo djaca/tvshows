@@ -1,13 +1,12 @@
 <template>
   <div
-    class="w-1/3 mb-4 fixed pin-b bg-ebony-clay text-nepal"
-    style="right: 0;left: 0;margin-right: auto;margin-left: auto;"
+    class="w-1/3 mb-4 fixed bottom-0 bg-ebony-clay text-nepal mx-auto left-0 right-0"
     v-show="downloading"
   >
     <div class="p-2">
       <div class="flex">
         <div
-          class="flex-1 grow"
+          class="flex-1"
           v-if="selectedTorrent"
         >
           <div class="text-lg">{{ selectedTorrent.showName }} - {{ selectedTorrent.episodeName }}
@@ -16,7 +15,7 @@
             <div>Season {{ selectedTorrent.season }}</div>
             <div>Episode {{ selectedTorrent.episode }}</div>
             <button
-              class="downloadTorrentBtn mt-2"
+              class="button mt-2"
               @click="play"
               v-if="torrent"
             >
@@ -27,10 +26,9 @@
         <div class="w-1/4 text-sm">
           <table>
             <tr>
-              <td>
+              <td class="text-oxford-blue">
                 <font-awesome-icon
                   icon="hdd"
-                  color="#323E4F"
                 />
               </td>
               <td>
@@ -38,10 +36,9 @@
               </td>
             </tr>
             <tr>
-              <td>
+              <td class="text-green-500">
                 <font-awesome-icon
                   icon="long-arrow-alt-down"
-                  color="#1BB934"
                 />
               </td>
               <td>
@@ -52,28 +49,28 @@
         </div>
       </div>
 
-      <div class="shadow-md w-full bg-nepal mt-2">
+      <div
+        class="shadow-md w-full bg-nepal mt-2"
+      >
         <div
           class="bg-malachite text-xs leading-none py-1 text-center font-bold text-oxford-blue"
-          :style="{width: remainingFormatted}"
+          :style="{ width: remainingFormatted }"
           v-text="remainingFormatted"
         ></div>
       </div>
 
-      <span
-        class="absolute p-1"
-        style="top: 0; right: 0"
+      <div
+        class="absolute top-0 right-0 pr-1"
       >
         <button
-          class="hover:text-grey"
+          class="text-red-500 hover:text-red-800"
           @click="cancelDownloading"
         >
           <font-awesome-icon
             icon="times"
-            color="#E1112C"
           />
         </button>
-      </span>
+      </div>
     </div>
   </div>
 </template>

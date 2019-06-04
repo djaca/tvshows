@@ -30,7 +30,7 @@
 
     <div>
       <button
-        class="text-blue"
+        class="text-green-500"
         @click="addShow"
         v-if="!exists(show.id)"
       >
@@ -41,7 +41,7 @@
       </button>
 
       <button
-        class="text-red"
+        class="text-red-500"
         @click="removeShow(show.id)"
         v-else
       >
