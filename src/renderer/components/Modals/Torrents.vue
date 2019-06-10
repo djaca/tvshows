@@ -19,7 +19,7 @@
         <td>
           <button
             class="text-nepal hover:text-oxford-blue"
-            @click="doDownload(torrent)"
+            @click="doDownload(torrent.magnet)"
           >
             <font-awesome-icon
               icon="download"
@@ -37,12 +37,15 @@
 
 <script>
   import { searchTorrents } from '@/api/thePirateBay'
-  import { mapGetters, mapActions } from 'vuex'
+  import downloadTorrent from '@/mixins/downloadTorrent'
+  import { mapGetters } from 'vuex'
 
   export default {
     name: 'Torrents',
 
-    props: ['episode'],
+    props: ['item'],
+
+    mixins: [downloadTorrent],
 
     data () {
       return {
@@ -55,17 +58,14 @@
       ...mapGetters('Show', ['id', 'name']),
 
       query () {
-        let name = this.name
-        let season = `S${this.episode.season_number <= 9 ? '0' : ''}${this.episode.season_number}`
-        let episode = `E${this.episode.episode_number <= 9 ? '0' : ''}${this.episode.episode_number}`
+        let season = `S${this.$route.params.season <= 9 ? '0' : ''}${this.$route.params.season}`
+        let episode = `E${this.item.episode_number <= 9 ? '0' : ''}${this.item.episode_number}`
 
-        return `${name} ${season}${episode}`
+        return `${this.name} ${season}${episode}`
       }
     },
 
     methods: {
-      ...mapActions('Torrent', ['download']),
-
       getTorrents () {
         searchTorrents(this.query)
           .then(data => {
@@ -76,18 +76,6 @@
 
             console.log(err)
           })
-      },
-
-      doDownload ({ magnet }) {
-        this.download({
-          id: this.episode.id,
-          showId: this.id,
-          showName: this.name,
-          episodeName: this.episode.name,
-          season: this.episode.season_number,
-          episode: this.episode.episode_number,
-          magnet: magnet
-        })
       }
     },
 

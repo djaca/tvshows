@@ -1,21 +1,23 @@
 import torrentStream from 'torrent-stream'
 import { formatBytes } from '@/utilities'
+
 const { app } = require('electron').remote
 
 let engine = null
 let timer = null
+const path = `${app.getPath('downloads')}/TVShows`
 
 const state = {
-  torrent: null,
+  id: null,
   size: 0,
   speed: 0,
   downloaded: 0
 }
 
 const getters = {
-  selectedTorrent: state => state.torrent,
+  id: state => state.id,
 
-  downloading: state => !!state.torrent,
+  downloading: state => !!state.id,
 
   fileSize: state => formatBytes(state.size, true),
 
@@ -24,13 +26,13 @@ const getters = {
   remaining: state => {
     let remaining = ((state.downloaded / state.size) * 100).toFixed(2)
 
-    return remaining > 1 && remaining <= 100 ? remaining : 0
+    return `${remaining > 1 && remaining <= 100 ? remaining : 0}%`
   }
 }
 
 const mutations = {
-  SET_TORRENT (state, torrent) {
-    state.torrent = torrent
+  SET_ID (state, id) {
+    state.id = id
   },
 
   SET_DOWNLOAD_INFO (state, { speed, downloaded }) {
@@ -44,13 +46,13 @@ const mutations = {
 }
 
 const actions = {
-  download ({ commit, dispatch, rootGetters }, torrent) {
+  download ({ commit, dispatch, rootState }, { id, episodeName, episode, magnet }) {
     dispatch('clear')
       .then(() => {
-        commit('SET_TORRENT', torrent)
+        commit('SET_ID', id)
       })
 
-    engine = torrentStream(torrent.magnet, { path: `${app.getPath('downloads')}/TVShows` })
+    engine = torrentStream(magnet, { path })
 
     engine.on('ready', () => {
       if (!engine) {
@@ -68,8 +70,13 @@ const actions = {
       }, 1000)
 
       dispatch('Torrents/add', {
-        ...torrent,
-        path: `${app.getPath('downloads')}/TVShows/${file.path}`
+        id,
+        showId: rootState.route.params.id,
+        episode,
+        season: rootState.route.params.season,
+        showName: rootState.Show.name,
+        episodeName,
+        path: `${path}/${file.path}`
       }, { root: true })
     })
 
@@ -79,8 +86,8 @@ const actions = {
   },
 
   cancel ({ state, dispatch }) {
-    return new Promise(async resolve => {
-      await dispatch('Torrents/remove', { id: state.torrent.id }, { root: true })
+    return new Promise(resolve => {
+      dispatch('Torrents/remove', { id: state.id }, { root: true })
 
       dispatch('clear')
 
@@ -100,7 +107,7 @@ const actions = {
         timer = null
       }
 
-      commit('SET_TORRENT', null)
+      commit('SET_ID', null)
       commit('SET_DOWNLOAD_INFO', { speed: 0, downloaded: 0 })
       commit('SET_SIZE', 0)
 

@@ -3,7 +3,10 @@
     class="bg-ebony-clay rounded-lg shadow-md overflow-hidden flex-1 flex flex-col"
     :class="{'opacity-25': isWatched(episode)}"
   >
-    <div class="bg-cover h-48" :style="image">
+    <div
+      class="bg-cover h-48"
+      :style="image"
+    >
       <button
         class="text-nepal hover:text-oxford-blue float-right mr-2 mt-2"
         @click="toggle(episode)"
@@ -15,24 +18,46 @@
       </button>
     </div>
 
-    <div class="p-4 flex-1 flex flex-col text-nepal">
-      <div class="mb-4">
-        <h3 class="text-2xl" v-text="item.name"></h3>
-        <div class="text-xs" v-text="date"></div>
-      </div>
-      <div class="mb-4 text-sm flex-1">
-        <p v-text="item.overview"></p>
+    <div
+      class="p-4 flex-1 flex flex-col text-nepal"
+    >
+      <div
+        class="mb-4"
+      >
+        <h3
+          class="text-2xl"
+          v-text="item.name"
+        ></h3>
+
+        <div
+          class="text-xs"
+          v-text="date"
+        ></div>
       </div>
 
-      <div class="mb-1">
-        <span class="text-xs float-right">Episode {{ episode }}</span>
+      <div
+        class="mb-4 text-sm flex-1"
+      >
+        <p
+          v-text="item.overview"
+        ></p>
+      </div>
+
+      <div
+        class="mb-1"
+      >
+        <span
+          class="text-xs float-right"
+        >
+          Episode {{ episode }}
+        </span>
       </div>
 
       <div
         class="border-t border-grey-light text-sm"
       >
         <card-actions
-          :episode="item"
+          :item="item"
         />
       </div>
     </div>

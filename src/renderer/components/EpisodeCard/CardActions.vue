@@ -45,26 +45,29 @@
 <script>
   import SubtitlesModal from '@/components/Modals/Subtitles'
   import TorrentsModal from '@/components/Modals/Torrents'
-  import { mapGetters, mapActions } from 'vuex'
+  import downloadTorrent from '@/mixins/downloadTorrent'
+  import { mapGetters } from 'vuex'
 
   export default {
     name: 'CardActions',
 
-    props: ['episode'],
+    props: ['item'],
+
+    mixins: [downloadTorrent],
 
     computed: {
       ...mapGetters('Subtitles', ['findSubtitleByEpisodeId']),
 
       ...mapGetters('Torrents', ['findTorrent']),
 
-      ...mapGetters('Show', ['id', 'name', 'torrents']),
+      ...mapGetters('Show', ['id', 'torrents']),
 
       episodeNumber () {
-        return this.episode.episode_number
+        return this.item.episode_number
       },
 
       seasonNumber () {
-        return this.episode.season_number
+        return this.item.season_number
       },
 
       availableTorrents () {
@@ -72,33 +75,19 @@
       },
 
       torrent () {
-        return this.findTorrent(this.episode.id)
+        return this.findTorrent(this.item.id)
       },
 
       subtitle () {
-        return this.findSubtitleByEpisodeId(this.episode.id)
+        return this.findSubtitleByEpisodeId(this.item.id)
       }
     },
 
     methods: {
-      ...mapActions('Torrent', ['download']),
-
-      doDownload (magnet) {
-        this.download({
-          id: this.episode.id,
-          showId: this.id,
-          showName: this.name,
-          episodeName: this.episode.name,
-          season: this.seasonNumber,
-          episode: this.episodeNumber,
-          magnet
-        })
-      },
-
       getSubtitles () {
         this.$modal.show(SubtitlesModal, {
-          episodeId: this.episode.id,
-          episodeNumber: this.episode.episode_number
+          episodeId: this.item.id,
+          episodeNumber: this.item.episode_number
         }, {
           height: 'auto',
           width: '60%',
@@ -108,7 +97,7 @@
 
       getTorrents () {
         this.$modal.show(TorrentsModal, {
-          episode: this.episode
+          item: this.item
         }, {
           height: 'auto',
           width: '60%'
