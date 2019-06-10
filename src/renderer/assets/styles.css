@@ -1,5 +1,3 @@
-@import "~@deveodk/vue-toastr/dist/@deveodk/vue-toastr.css";
-
 @tailwind base;
 
 @tailwind components;
