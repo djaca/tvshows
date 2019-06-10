@@ -4,13 +4,13 @@ import App from './App'
 import router from './router'
 import store from './store'
 import { sync } from 'vuex-router-sync'
-import '@/assets/styles.css'
 import VModal from 'vue-js-modal'
 import { DateTime } from 'luxon'
 import Loading from 'vue-loading-overlay'
-import 'vue-loading-overlay/dist/vue-loading.css'
-import FontAwesomeIcon from '@/plugins/font-awesome'
 import VueToastr from '@deveodk/vue-toastr'
+import '@/plugins/font-awesome'
+import 'vue-loading-overlay/dist/vue-loading.css'
+import '@/assets/styles.css'
 
 sync(store, router)
 
@@ -20,7 +20,6 @@ Vue.use(VueToastr, {
   closeOnHover: false
 })
 
-Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.use(VModal, { dynamic: true, injectModalsContainer: true })
 
 Vue.use(Loading, {
