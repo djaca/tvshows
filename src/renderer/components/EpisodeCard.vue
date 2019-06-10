@@ -1,12 +1,12 @@
 <template>
   <div
     class="bg-ebony-clay rounded-lg shadow-md overflow-hidden flex-1 flex flex-col"
-    :class="{'opacity-25': watched}"
+    :class="{'opacity-25': isWatched(episode)}"
   >
     <div class="bg-cover h-48" :style="image">
       <button
         class="text-nepal hover:text-oxford-blue float-right mr-2 mt-2"
-        @click="toggleWatch"
+        @click="toggle(episode)"
       >
         <font-awesome-icon
           icon="eye"
@@ -68,10 +68,6 @@
         return this.item.season_number
       },
 
-      watched () {
-        return this.isWatched(this.season, this.episode)
-      },
-
       image () {
         if (this.item.still_path) {
           return { backgroundImage: `url('https://image.tmdb.org/t/p/w300${this.item.still_path}')` }
@@ -80,15 +76,7 @@
     },
 
     methods: {
-      ...mapActions('Watch', ['toggle']),
-
-      toggleWatch () {
-        this.toggle({
-          id: this.item.show_id,
-          season: this.season,
-          episode: this.episode
-        })
-      }
+      ...mapActions('Watch', ['toggle'])
     }
   }
 </script>

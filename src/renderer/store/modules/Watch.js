@@ -3,8 +3,8 @@ const state = {
 }
 
 const getters = {
-  isWatched: (state, getters, rootState, rootGetters) => (season, episode) => {
-    let show = state.data.find(s => s.id === rootGetters['Show/id'] && s.season === season)
+  isWatched: (state, getters, rootState) => episode => {
+    let show = state.data.find(s => s.id === rootState.route.params.id && s.season === rootState.route.params.season)
 
     return show ? show.episodes.includes(episode) : false
   }
@@ -12,17 +12,13 @@ const getters = {
 
 const mutations = {
   WATCH (state, { index, id, season, episode }) {
-    if (typeof index === 'undefined') {
-      state.data.push({
+    typeof index !== 'undefined'
+      ? state.data[index].episodes.push(episode)
+      : state.data.push({
         id,
         season,
         episodes: [episode]
       })
-
-      return
-    }
-
-    state.data[index].episodes.push(episode)
   },
 
   UNWATCH (state, { index, episode }) {
@@ -31,22 +27,19 @@ const mutations = {
 }
 
 const actions = {
-  toggle ({ dispatch, commit, state }, payload) {
-    let index = state.data.findIndex(s => s.season === payload.season && s.id === payload.id)
+  toggle ({ commit, state, rootState }, episode) {
+    let id = rootState.route.params.id
+    let season = rootState.route.params.season
 
-    if (index === -1) {
-      commit('WATCH', payload)
+    let index = state.data.findIndex(s => s.season === season && s.id === id)
 
-      return
-    }
-
-    if (state.data[index].episodes.includes(payload.episode)) {
-      commit('UNWATCH', { index, episode: payload.episode })
+    if (index !== -1) {
+      commit(state.data[index].episodes.includes(episode) ? 'UNWATCH' : 'WATCH', { index, episode })
 
       return
     }
 
-    commit('WATCH', { index, episode: payload.episode })
+    commit('WATCH', { id, season, episode })
   }
 }
 
