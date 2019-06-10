@@ -1,11 +1,11 @@
 <template>
-  <div v-if="show">
+  <div v-if="seasons.length > 0">
     <heading/>
 
     <div class="mt-5">
       <v-tiles-container
-        :items="items"
-        @click="goTo('season', { id: show.id, season: $event.id })"
+        :items="seasons"
+        @click="goTo('season', { id: $route.params.id, season: $event.id })"
       />
     </div>
   </div>
@@ -25,39 +25,24 @@
     mixins: [goTo],
 
     computed: {
-      ...mapGetters('Shows', ['show']),
-
-      id () {
-        return this.$route.params.id
-      },
-
-      items () {
-        return this.show.seasons.map(s => {
-          return {
-            id: s.season_number,
-            img: s.poster_path
-          }
-        })
-      }
+      ...mapGetters('Show', ['seasons'])
     },
 
     methods: {
-      ...mapActions('Shows', ['fetchShow']),
+      ...mapActions('Show', ['fetch']),
 
-      getShow () {
-        if (this.show && this.show.id === parseInt(this.id)) {
-          return
-        }
-
+      async getShow () {
         let loader = this.$loading.show()
 
-        this.fetchShow(this.id)
-          .catch(err => {
-            this.$toastr('error', 'Can`t connect to TMDb', 'Error')
+        try {
+          await this.fetch()
+        } catch (err) {
+          this.$toastr('error', 'Can`t connect to TMDb', 'Error')
 
-            console.log(err)
-          })
-          .finally(() => (loader.hide()))
+          console.log(err)
+        }
+
+        loader.hide()
       }
     },
 

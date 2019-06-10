@@ -3,7 +3,6 @@
     <div
       class="text-center text-nepal text-3xl my-4"
       v-text="title"
-      v-if="show"
     ></div>
 
     <div
@@ -35,14 +34,14 @@
     components: { EpisodeCard },
 
     computed: {
-      ...mapGetters('Shows', ['show', 'episodes']),
+      ...mapGetters('Show', ['name', 'episodes']),
 
       season () {
         return this.$route.params.season
       },
 
       title () {
-        return `${this.show.name} - Season ${this.season}`
+        return `${this.name} - Season ${this.season}`
       }
     },
 
@@ -51,23 +50,25 @@
     },
 
     methods: {
-      ...mapActions('Shows', ['fetchSeason']),
+      ...mapActions('Show', ['fetchSeason']),
 
-      getSeason () {
+      async getSeason () {
         const loader = this.$loading.show()
 
-        this.fetchSeason(this.season)
-          .catch(err => {
-            this.$toastr('error', 'Can`t get episodes', 'Error')
+        try {
+          await this.fetchSeason()
+        } catch (err) {
+          this.$toastr('error', 'Can`t get episodes', 'Error')
 
-            console.log(err)
-          })
-          .finally(() => loader.hide())
+          console.log(err)
+        }
+
+        loader.hide()
       }
     },
 
     mounted () {
-      this.show
+      this.name.length > 0
         ? this.getSeason()
         : this.$router.push({ name: 'home' })
     }

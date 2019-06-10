@@ -30,10 +30,8 @@
 
       <div
         class="border-t border-grey-light text-sm"
-        v-if="torrents"
       >
         <card-actions
-          :availableTorrents="torrents.torrents"
           :episode="item"
         />
       </div>
@@ -60,6 +58,8 @@
     computed: {
       ...mapGetters('Watch', ['isWatched']),
 
+      ...mapGetters('Show', ['date']),
+
       episode () {
         return this.item.episode_number
       },
@@ -72,18 +72,10 @@
         return this.isWatched(this.season, this.episode)
       },
 
-      torrents () {
-        return this.$store.getters['Shows/torrents'](this.season, this.episode)
-      },
-
       image () {
         if (this.item.still_path) {
           return { backgroundImage: `url('https://image.tmdb.org/t/p/w300${this.item.still_path}')` }
         }
-      },
-
-      date () {
-        return this.humanTime(this.item.air_date)
       }
     },
 

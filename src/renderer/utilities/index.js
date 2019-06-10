@@ -1,3 +1,5 @@
+import { DateTime } from 'luxon'
+
 export function formatBytes (a, round = false) {
   if (a === 0) {
     return '0 Bytes'
@@ -12,4 +14,8 @@ export function formatBytes (a, round = false) {
   }
 
   return parseFloat((a / Math.pow(c, f)).toFixed(d)) + ' ' + e[f]
+}
+
+export function formatDate (date) {
+  return DateTime.fromISO(date).toLocaleString(DateTime.DATE_MED)
 }

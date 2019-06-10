@@ -1,7 +1,6 @@
 <template>
   <div
     class="mx-2 flex"
-    v-if="show"
   >
     <div class="w-1/2 sm:w-1/4 md:w-1/5 lg:w-1/6 xl:w-1/8 p-2">
       <img
@@ -32,7 +31,7 @@
       <button
         class="text-green-500"
         @click="addShow"
-        v-if="!exists(show.id)"
+        v-if="!exists(id)"
       >
         <font-awesome-icon
           icon="plus"
@@ -42,7 +41,7 @@
 
       <button
         class="text-red-500"
-        @click="removeShow(show.id)"
+        @click="removeShow()"
         v-else
       >
         <font-awesome-icon
@@ -60,39 +59,9 @@
     name: 'Heading',
 
     computed: {
-      ...mapGetters('Shows', ['show', 'exists']),
+      ...mapGetters('Show', ['id', 'name', 'genre', 'date', 'runtime', 'rating', 'status', 'overview', 'img']),
 
-      name () {
-        return this.show.name
-      },
-
-      genre () {
-        return this.show.genres.map(genre => genre.name).join(' | ')
-      },
-
-      date () {
-        return this.humanTime(this.show.first_air_date)
-      },
-
-      runtime () {
-        return `${this.show.episode_run_time[0]} min`
-      },
-
-      rating () {
-        return `Rating: ${this.show.vote_average}`
-      },
-
-      status () {
-        return this.show.status
-      },
-
-      overview () {
-        return this.show.overview
-      },
-
-      img () {
-        return `https://image.tmdb.org/t/p/w342${this.show.poster_path}`
-      }
+      ...mapGetters('Shows', ['exists'])
     },
 
     methods: {
@@ -104,8 +73,8 @@
         this.$toastr('info', 'Show added to library')
       },
 
-      removeShow (id) {
-        this.remove(id)
+      removeShow () {
+        this.remove()
 
         this.$toastr('info', 'Show removed from library')
       }

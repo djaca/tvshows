@@ -13,7 +13,7 @@
 
       <tbody>
       <tr
-        v-for="(subtitle, i) in subtitles"
+        v-for="(subtitle, i) in subtitles(episodeNumber)"
         :key="i"
       >
         <td v-text="subtitle.versions"></td>
@@ -63,13 +63,9 @@
     },
 
     computed: {
-      ...mapGetters('Shows', ['seasonSubtitles']),
+      ...mapGetters('Show', ['subtitles']),
 
       ...mapGetters('Subtitles', ['findSubtitleByEpisodeId']),
-
-      subtitles () {
-        return this.seasonSubtitles(this.episodeNumber)
-      },
 
       subtitle () {
         return this.findSubtitleByEpisodeId(this.episodeId)

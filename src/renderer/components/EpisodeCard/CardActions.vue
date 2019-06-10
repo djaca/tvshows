@@ -50,14 +50,14 @@
   export default {
     name: 'CardActions',
 
-    props: ['availableTorrents', 'episode'],
+    props: ['episode'],
 
     computed: {
       ...mapGetters('Subtitles', ['findSubtitleByEpisodeId']),
 
       ...mapGetters('Torrents', ['findTorrent']),
 
-      ...mapGetters('Shows', ['show']),
+      ...mapGetters('Show', ['id', 'name', 'torrents']),
 
       episodeNumber () {
         return this.episode.episode_number
@@ -65,6 +65,10 @@
 
       seasonNumber () {
         return this.episode.season_number
+      },
+
+      availableTorrents () {
+        return this.torrents(this.seasonNumber, this.episodeNumber).torrents
       },
 
       torrent () {
@@ -82,8 +86,8 @@
       doDownload (magnet) {
         this.download({
           id: this.episode.id,
-          showId: this.show.id,
-          showName: this.show.name,
+          showId: this.id,
+          showName: this.name,
           episodeName: this.episode.name,
           season: this.seasonNumber,
           episode: this.episodeNumber,

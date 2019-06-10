@@ -3,6 +3,7 @@ import axios from 'axios'
 import App from './App'
 import router from './router'
 import store from './store'
+import { sync } from 'vuex-router-sync'
 import '@/assets/styles.css'
 import VModal from 'vue-js-modal'
 import { DateTime } from 'luxon'
@@ -10,6 +11,8 @@ import Loading from 'vue-loading-overlay'
 import 'vue-loading-overlay/dist/vue-loading.css'
 import FontAwesomeIcon from '@/plugins/font-awesome'
 import VueToastr from '@deveodk/vue-toastr'
+
+sync(store, router)
 
 Vue.use(VueToastr, {
   defaultPosition: 'toast-top-right',

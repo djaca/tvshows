@@ -4,7 +4,7 @@ const state = {
 
 const getters = {
   isWatched: (state, getters, rootState, rootGetters) => (season, episode) => {
-    let show = state.data.find(s => s.id === rootGetters['Shows/show'].id && s.season === season)
+    let show = state.data.find(s => s.id === rootGetters['Show/id'] && s.season === season)
 
     return show ? show.episodes.includes(episode) : false
   }

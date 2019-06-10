@@ -52,10 +52,10 @@
     },
 
     computed: {
-      ...mapGetters('Shows', ['show']),
+      ...mapGetters('Show', ['id', 'name']),
 
       query () {
-        let name = this.show.name
+        let name = this.name
         let season = `S${this.episode.season_number <= 9 ? '0' : ''}${this.episode.season_number}`
         let episode = `E${this.episode.episode_number <= 9 ? '0' : ''}${this.episode.episode_number}`
 
@@ -81,8 +81,8 @@
       doDownload ({ magnet }) {
         this.download({
           id: this.episode.id,
-          showId: this.show.id,
-          showName: this.show.name,
+          showId: this.id,
+          showName: this.name,
           episodeName: this.episode.name,
           season: this.episode.season_number,
           episode: this.episode.episode_number,
