@@ -24,27 +24,27 @@
           class="fa fa-2x fa-bars"
         ></i>
       </a>
+
+      <span
+        :class="['ml-6', {invisible: !$route.params.season}]"
+      >
+        <router-link
+          v-if="$route.params.id"
+          :to="{name: 'show', params: { id: $route.params.id }}"
+          class="text-nepal hover:text-black"
+        >
+          <font-awesome-icon
+            icon="arrow-left"
+            size="lg"
+          />
+        </router-link>
+      </span>
     </div>
 
     <nav>
       <ul
         class="list-reset md:flex md:items-center"
       >
-        <li
-          :class="['md:ml-4', {invisible: !$route.params.season}]"
-        >
-          <router-link
-            v-if="$route.params.id"
-            :to="{name: 'show', params: { id: $route.params.id }}"
-            class="text-nepal hover:text-black"
-          >
-            <font-awesome-icon
-              icon="arrow-left"
-              size="lg"
-            />
-          </router-link>
-        </li>
-
         <li
           class="md:ml-4"
         >
