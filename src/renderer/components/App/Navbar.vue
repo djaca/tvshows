@@ -1,7 +1,13 @@
 <template>
-  <header class="bg-oxford-blue md:flex md:items-center md:justify-between p-4 pb-0 shadow-md md:pb-4 mb-5">
-    <div class="flex items-center justify-between mb-4 md:mb-0">
-      <h4 class="leading-none text-lg text-nepal">
+  <header
+    class="bg-oxford-blue md:flex md:items-center md:justify-between p-4 pb-0 shadow-md md:pb-4 mb-5"
+  >
+    <div
+      class="flex items-center justify-between mb-4 md:mb-0"
+    >
+      <h4
+        class="leading-none text-lg text-nepal"
+      >
         <router-link
           to="/"
           class="no-underline text-nepal hover:text-black"
@@ -10,14 +16,23 @@
         </router-link>
       </h4>
 
-      <a class="text-black hover:text-orange md:hidden" href="#">
-        <i class="fa fa-2x fa-bars"></i>
+      <a
+        class="text-black hover:text-orange md:hidden"
+        href="#"
+      >
+        <i
+          class="fa fa-2x fa-bars"
+        ></i>
       </a>
     </div>
 
     <nav>
-      <ul class="list-reset md:flex md:items-center">
-        <li :class="['md:ml-4', {invisible: !$route.params.season}]">
+      <ul
+        class="list-reset md:flex md:items-center"
+      >
+        <li
+          :class="['md:ml-4', {invisible: !$route.params.season}]"
+        >
           <router-link
             v-if="$route.params.id"
             :to="{name: 'show', params: { id: $route.params.id }}"
@@ -30,7 +45,9 @@
           </router-link>
         </li>
 
-        <li class="md:ml-4">
+        <li
+          class="md:ml-4"
+        >
           <router-link
             to="/browse"
             class="block py-2 text-nepal hover:text-black md:border-none md:p-0"
