@@ -1,41 +1,44 @@
 <template>
-  <div class="p-4 bg-ebony-clay-2 border border-ebony-clay-2 text-nepal">
-    <table class="table w-full">
-      <thead>
-      <tr>
-        <th
-          v-for="(header, i) in headers"
-          :key="i"
-          v-text="header"
-        ></th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr
-        v-for="(torrent, index) in torrents"
-        :key="index"
+  <div
+    class="p-4 bg-ebony-clay-2 border border-ebony-clay-2 text-nepal"
+  >
+    <v-table
+      class="table w-full"
+      :columns="columns"
+      :items="torrents"
+    >
+      <template
+        slot-scope="{ row }"
       >
-        <td v-text="torrent.title"></td>
+        <td>
+          {{ row.title }}
+        </td>
         <td>
           <button
             class="text-nepal hover:text-oxford-blue"
-            @click="doDownload(torrent.magnet)"
+            @click="doDownload(row.magnet)"
           >
             <font-awesome-icon
               icon="download"
               size="lg"/>
           </button>
         </td>
-        <td v-text="torrent.size"></td>
-        <td v-text="torrent.seeders"></td>
-        <td v-text="torrent.leechers"></td>
-      </tr>
-      </tbody>
-    </table>
+        <td>
+          {{ row.size }}
+        </td>
+        <td>
+          {{ row.seeders }}
+        </td>
+        <td>
+          {{ row.leechers }}
+        </td>
+      </template>
+    </v-table>
   </div>
 </template>
 
 <script>
+  import VTable from '@/components/VTable'
   import { searchTorrents } from '@/api/thePirateBay'
   import downloadTorrent from '@/mixins/downloadTorrent'
   import { mapGetters } from 'vuex'
@@ -43,13 +46,15 @@
   export default {
     name: 'Torrents',
 
+    components: { VTable },
+
     props: ['item'],
 
     mixins: [downloadTorrent],
 
     data () {
       return {
-        headers: ['title', '', 'size', 'seeders', 'leechers'],
+        columns: ['title', '', 'size', 'seeders', 'leechers'],
         torrents: []
       }
     },

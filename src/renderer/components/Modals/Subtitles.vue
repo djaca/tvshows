@@ -1,27 +1,21 @@
 <template>
   <div class="p-4 bg-ebony-clay-2 border border-ebony-clay-2 text-nepal">
-    <table class="table w-full">
-      <thead>
-      <tr>
-        <th
-          v-for="(header, i) in headers"
-          :key="i"
-          v-text="header"
-        ></th>
-      </tr>
-      </thead>
-
-      <tbody>
-      <tr
-        v-for="(subtitle, i) in subtitles(episodeNumber)"
-        :key="i"
+    <v-table
+      class="table w-full"
+      :columns="columns"
+      :items="subtitles(episodeNumber)"
+    >
+      <template
+        slot-scope="{ row }"
       >
-        <td v-text="subtitle.versions"></td>
+        <td>
+          {{ row.versions }}
+        </td>
         <td>
           <button
-            v-if="!exists(subtitle.id)"
+            v-if="!exists(row.id)"
             class="text-nepal hover:text-oxford-blue"
-            @click="doDownload(subtitle.id)"
+            @click="doDownload(row.id)"
           >
             <font-awesome-icon
               icon="download"
@@ -39,31 +33,43 @@
             />
           </button>
         </td>
-        <td v-text="subtitle.language"></td>
-        <td v-text="subtitle.author"></td>
-        <td v-text="subtitle.downloadCount"></td>
-      </tr>
-      </tbody>
-    </table>
+        <td>
+          {{ row.language }}
+        </td>
+        <td>
+          {{ row.author }}
+        </td>
+        <td>
+          {{ row.downloadCount }}
+        </td>
+      </template>
+    </v-table>
   </div>
 </template>
 
 <script>
+  import VTable from '@/components/VTable'
   import { mapGetters, mapActions } from 'vuex'
 
   export default {
     name: 'Subtitles',
 
+    components: { VTable },
+
     props: ['episodeId', 'episodeNumber'],
 
     data () {
       return {
-        headers: ['Version', '', 'Language', 'Author', 'Downloaded']
+        columns: ['version', '', 'language', 'author', 'downloaded']
       }
     },
 
     computed: {
       ...mapGetters('Show', ['subtitles']),
+
+      sub () {
+        return this.subtitles
+      },
 
       ...mapGetters('Subtitles', ['findSubtitleByEpisodeId']),
 
