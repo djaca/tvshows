@@ -71,16 +71,14 @@
     },
 
     methods: {
-      getTorrents () {
-        searchTorrents(this.query)
-          .then(data => {
-            this.torrents = data
-          })
-          .catch(err => {
-            this.$toastr('error', 'Can`t fetch torrents', 'Error')
+      async getTorrents () {
+        try {
+          this.torrents = await searchTorrents(this.query)
+        } catch (err) {
+          this.$toastr('error', 'Can`t fetch torrents', 'Error')
 
-            console.log(err)
-          })
+          console.log(err)
+        }
       }
     },
 
