@@ -1,7 +1,7 @@
 <template>
   <div class="mt-2 overflow-hidden">
     <button
-      v-for="(torrent, type) in availableTorrents"
+      v-for="(torrent, type) in torrents(episodeNumber)"
       :key="type"
       class="button"
       @click="doDownload(torrent.url)"
@@ -66,14 +66,6 @@
         return this.item.episode_number
       },
 
-      seasonNumber () {
-        return this.item.season_number
-      },
-
-      availableTorrents () {
-        return this.torrents(this.seasonNumber, this.episodeNumber).torrents
-      },
-
       torrent () {
         return this.findTorrent(this.item.id)
       },
@@ -87,7 +79,7 @@
       getSubtitles () {
         this.$modal.show(SubtitlesModal, {
           episodeId: this.item.id,
-          episodeNumber: this.item.episode_number
+          episodeNumber: this.episodeNumber
         }, {
           height: 'auto',
           width: '60%',

@@ -2,6 +2,9 @@ import { getEpisodes, getImdbId, getShow } from '@/api/tmdb'
 import { getTorrentsFor } from '@/api/tvApi'
 import { searchTitlovi } from '@/api/titlovi'
 import groupBy from 'lodash/groupBy'
+import mapKeys from 'lodash/mapKeys'
+import mapValues from 'lodash/mapValues'
+import omitDeep from 'omit-deep'
 import { formatDate } from '../../utilities'
 
 const state = {
@@ -44,7 +47,9 @@ const getters = {
 
   episodes: state => state.episodes,
 
-  torrents: state => (season, episode) => state.torrents[season] ? state.torrents[season].find(e => e.episode === episode) : [],
+  torrents: (state, getters, rootState) => episode => state.torrents[rootState.route.params.season]
+    ? state.torrents[rootState.route.params.season][episode]
+    : [],
 
   subtitles: state => episode => state.subtitles[episode]
 }
@@ -95,7 +100,7 @@ const mutations = {
   },
 
   SET_TORRENTS (state, payload) {
-    state.torrents = groupBy(payload, 'season')
+    state.torrents = payload
   },
 
   SET_SUBTITLES (state, payload) {
@@ -146,7 +151,7 @@ const actions = {
     try {
       const { data } = await getTorrentsFor(state.imdbId)
 
-      commit('SET_TORRENTS', data.episodes)
+      commit('SET_TORRENTS', parseTorrents(data))
     } catch (err) {
       console.log(err)
     }
@@ -187,4 +192,10 @@ export default {
   getters,
   mutations,
   actions
+}
+
+function parseTorrents (data) {
+  let items = data.episodes.map(e => ({ episode: e.episode, ...e.torrents, season: e.season }))
+
+  return omitDeep(mapValues(groupBy(items, 'season'), arr => mapKeys(arr, t => (t.episode))), ['season', 'episode'])
 }
