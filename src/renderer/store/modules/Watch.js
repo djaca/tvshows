@@ -33,13 +33,9 @@ const actions = {
 
     let index = state.data.findIndex(s => s.season === season && s.id === id)
 
-    if (index !== -1) {
-      commit(state.data[index].episodes.includes(episode) ? 'UNWATCH' : 'WATCH', { index, episode })
-
-      return
-    }
-
-    commit('WATCH', { id, season, episode })
+    index !== -1
+      ? commit(state.data[index].episodes.includes(episode) ? 'UNWATCH' : 'WATCH', { index, episode })
+      : commit('WATCH', { id, season, episode })
   }
 }
 
