@@ -3,7 +3,7 @@
     <v-table
       class="table w-full"
       :columns="columns"
-      :items="subtitles(episodeNumber)"
+      :items="subtitles(item.episode)"
     >
       <template
         slot-scope="{ row }"
@@ -56,7 +56,7 @@
 
     components: { VTable },
 
-    props: ['episodeId', 'episodeNumber'],
+    props: ['item'],
 
     data () {
       return {
@@ -74,7 +74,7 @@
       ...mapGetters('Subtitles', ['findSubtitleByEpisodeId']),
 
       subtitle () {
-        return this.findSubtitleByEpisodeId(this.episodeId)
+        return this.findSubtitleByEpisodeId(this.item.id)
       }
     },
 
@@ -82,7 +82,7 @@
       ...mapActions('Subtitles', ['download']),
 
       async doDownload (urlId) {
-        await this.download({ id: this.episodeId, urlId })
+        await this.download({ id: this.item.id, urlId })
 
         this.$emit('close')
       },

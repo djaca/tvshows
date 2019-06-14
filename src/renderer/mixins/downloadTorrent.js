@@ -8,9 +8,11 @@ export default {
       this.download({
         id: this.item.id,
         episodeName: this.item.name,
-        episode: this.item.episode_number,
+        episode: this.item.episode,
         magnet
       })
+
+      this.$emit('close')
     }
   }
 }

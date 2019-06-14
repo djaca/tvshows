@@ -57,7 +57,11 @@
         class="border-t border-grey-light text-sm"
       >
         <card-actions
-          :item="item"
+          :item="{
+            id: item.id,
+            name: item.name,
+            episode: item.episode_number
+          }"
         />
       </div>
     </div>

@@ -1,6 +1,7 @@
 <template>
   <div
     class="p-4 bg-ebony-clay-2 border border-ebony-clay-2 text-nepal"
+    v-show="torrents.length > 0"
   >
     <v-table
       class="table w-full"
@@ -64,7 +65,7 @@
 
       query () {
         let season = `S${this.$route.params.season <= 9 ? '0' : ''}${this.$route.params.season}`
-        let episode = `E${this.item.episode_number <= 9 ? '0' : ''}${this.item.episode_number}`
+        let episode = `E${this.item.episode <= 9 ? '0' : ''}${this.item.episode}`
 
         return `${this.name} ${season}${episode}`
       }
@@ -72,6 +73,8 @@
 
     methods: {
       async getTorrents () {
+        let loader = this.$loading.show()
+
         try {
           this.torrents = await searchTorrents(this.query)
         } catch (err) {
@@ -79,6 +82,8 @@
 
           console.log(err)
         }
+
+        loader.hide()
       }
     },
 
