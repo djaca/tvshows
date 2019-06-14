@@ -1,0 +1,5 @@
+import '@/plugins/font-awesome'
+import '@/plugins/toastr'
+import '@/plugins/loading'
+import '@/plugins/modal'
+import '@/plugins/vuex-sync'
