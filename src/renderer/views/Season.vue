@@ -46,30 +46,16 @@
     },
 
     watch: {
-      '$route': 'getSeason'
+      '$route': 'fetchSeason'
     },
 
     methods: {
-      ...mapActions('Show', ['fetchSeason']),
-
-      async getSeason () {
-        const loader = this.$loading.show()
-
-        try {
-          await this.fetchSeason()
-        } catch (err) {
-          this.$toastr('error', 'Can`t get episodes', 'Error')
-
-          console.log(err)
-        }
-
-        loader.hide()
-      }
+      ...mapActions('Show', ['fetchSeason'])
     },
 
     mounted () {
       this.name.length > 0
-        ? this.getSeason()
+        ? this.fetchSeason()
         : this.$router.push({ name: 'home' })
     }
   }

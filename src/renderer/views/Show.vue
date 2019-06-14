@@ -29,29 +29,15 @@
     },
 
     methods: {
-      ...mapActions('Show', ['fetch']),
-
-      async getShow () {
-        let loader = this.$loading.show()
-
-        try {
-          await this.fetch()
-        } catch (err) {
-          this.$toastr('error', 'Can`t connect to TMDb', 'Error')
-
-          console.log(err)
-        }
-
-        loader.hide()
-      }
+      ...mapActions('Show', ['fetch'])
     },
 
     watch: {
-      '$route': 'getShow'
+      '$route': 'fetch'
     },
 
     beforeMount () {
-      this.getShow()
+      this.fetch()
     }
   }
 </script>

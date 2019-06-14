@@ -102,7 +102,7 @@
       >
         <button
           class="text-red-500 hover:text-red-800"
-          @click="cancelDownloading"
+          @click="cancel"
         >
           <font-awesome-icon
             icon="times"
@@ -139,12 +139,6 @@
 
     methods: {
       ...mapActions('Torrent', ['cancel']),
-
-      async cancelDownloading () {
-        await this.cancel()
-
-        this.$toastr('info', 'Torrent download canceled', 'Info')
-      },
 
       play () {
         if (this.subtitle) {

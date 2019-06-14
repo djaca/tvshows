@@ -75,8 +75,7 @@
 
     data () {
       return {
-        shows: null,
-        loader: null
+        shows: null
       }
     },
 
@@ -117,36 +116,16 @@
       ...mapActions('Browse', ['getPopular', 'search', 'clearSearch']),
 
       async getPopularShows () {
-        let loader = this.$loading.show()
+        await this.getPopular()
 
-        try {
-          await this.getPopular()
-
-          this.shows = this.popular
-        } catch (err) {
-          this.$toastr('error', 'Can`t connect to TMDb', 'Error')
-
-          console.log(err)
-        }
-
-        loader.hide()
+        this.shows = this.popular
       },
 
       async doSearch () {
         if (this.query && this.query !== ' ') {
-          let loader = this.$loading.show()
+          await this.search()
 
-          try {
-            await this.search()
-
-            this.shows = this.results
-          } catch (err) {
-            this.$toastr('error', 'Can`t search TMDb', 'Error')
-
-            console.log(err)
-          }
-
-          loader.hide()
+          this.shows = this.results
         }
       },
 

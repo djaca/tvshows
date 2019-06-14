@@ -82,17 +82,9 @@
       ...mapActions('Subtitles', ['download']),
 
       async doDownload (urlId) {
-        try {
-          await this.download({ id: this.episodeId, urlId })
+        await this.download({ id: this.episodeId, urlId })
 
-          this.$emit('close')
-
-          this.$toastr('success', 'Subtitle downloaded', 'Success')
-        } catch (e) {
-          this.$toastr('error', 'Can`t download subtitle', 'Error')
-
-          console.log(e)
-        }
+        this.$emit('close')
       },
 
       open () {

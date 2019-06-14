@@ -86,13 +86,11 @@ const actions = {
   },
 
   cancel ({ state, dispatch }) {
-    return new Promise(resolve => {
-      dispatch('Torrents/remove', { id: state.id }, { root: true })
+    dispatch('Torrents/remove', { id: state.id }, { root: true })
 
-      dispatch('clear')
+    dispatch('clear')
 
-      resolve()
-    })
+    this._vm.$toastr('info', 'Torrent download canceled')
   },
 
   clear ({ commit }) {

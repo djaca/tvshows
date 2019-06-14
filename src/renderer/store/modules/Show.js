@@ -6,6 +6,7 @@ import mapKeys from 'lodash/mapKeys'
 import mapValues from 'lodash/mapValues'
 import omitDeep from 'omit-deep'
 import { formatDate } from '../../utilities'
+import router from '../../router'
 
 const state = {
   id: null,
@@ -109,28 +110,32 @@ const mutations = {
 }
 
 const actions = {
-  fetch ({ commit, dispatch, state, rootState }) {
+  async fetch ({ commit, dispatch, state, rootState }) {
     if (state.id === parseInt(rootState.route.params.id)) {
       return
     }
+
+    let loader = this._vm.$loading.show()
 
     commit('RESET')
 
     commit('SET_ID', parseInt(rootState.route.params.id))
 
-    return new Promise(async (resolve, reject) => {
-      try {
-        await dispatch('getImdbId')
+    try {
+      await dispatch('getImdbId')
 
-        dispatch('fetchPrimaryTorrents')
+      dispatch('fetchPrimaryTorrents')
 
-        commit('SET_DETAILS', await getShow(state.id))
+      commit('SET_DETAILS', await getShow(state.id))
+    } catch (err) {
+      router.push({ name: 'home' })
 
-        resolve()
-      } catch (e) {
-        reject(e)
-      }
-    })
+      this._vm.$toastr('error', 'Can`t connect to TMDb')
+
+      console.log(err)
+    }
+
+    loader.hide()
   },
 
   getImdbId ({ commit, rootState }) {
@@ -153,26 +158,32 @@ const actions = {
 
       commit('SET_TORRENTS', parseTorrents(data))
     } catch (err) {
+      this._vm.$toastr('error', 'Can`t fetch torrents')
+
       console.log(err)
     }
   },
 
-  fetchSeason ({ commit, dispatch, state, rootState }) {
+  async fetchSeason ({ commit, dispatch, state, rootState }) {
+    let loader = this._vm.$loading.show()
+
     commit('SET_EPISODES', [])
 
-    return new Promise(async (resolve, reject) => {
-      try {
-        dispatch('getSubtitles')
+    try {
+      dispatch('getSubtitles')
 
-        const { episodes } = await getEpisodes(state.id, rootState.route.params.season)
+      const { episodes } = await getEpisodes(state.id, rootState.route.params.season)
 
-        commit('SET_EPISODES', episodes)
+      commit('SET_EPISODES', episodes)
+    } catch (e) {
+      router.push({ name: 'home' })
 
-        resolve()
-      } catch (e) {
-        reject(e)
-      }
-    })
+      this._vm.$toastr('error', 'Can`t get episodes')
+
+      console.log(e)
+    }
+
+    loader.hide()
   },
 
   async getSubtitles ({ commit, state, rootState }) {
@@ -181,6 +192,8 @@ const actions = {
 
       commit('SET_SUBTITLES', data)
     } catch (err) {
+      this._vm.$toastr('error', 'Can`t fetch subtitles')
+
       console.log(err)
     }
   }

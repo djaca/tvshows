@@ -28,7 +28,7 @@ const actions = {
   },
 
   download ({ commit, dispatch }, { id, urlId }) {
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
       ipcRenderer.send('download-subtitle', { urlId })
 
       ipcRenderer.once('subtitle-downloaded', (event, { path }) => {
@@ -36,11 +36,15 @@ const actions = {
 
         commit('ADD', { id: urlId, episodeId: id, path })
 
+        this._vm.$toastr('success', 'Subtitle downloaded')
+
         resolve()
       })
 
       ipcRenderer.on('download-subtitle-error', (event, err) => {
-        reject(err)
+        this._vm.$toastr('error', 'Can`t download subtitle')
+
+        console.log(err)
       })
     })
   }

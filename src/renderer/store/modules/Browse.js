@@ -29,7 +29,9 @@ const mutations = {
 
 const actions = {
   getPopular ({ commit, state }) {
-    return new Promise(async (resolve, reject) => {
+    return new Promise(async resolve => {
+      let loader = this._vm.$loading.show()
+
       try {
         let { results } = await getPopularShows(state.page)
 
@@ -37,13 +39,19 @@ const actions = {
 
         resolve()
       } catch (err) {
-        reject(err)
+        this._vm.$toastr('error', 'Can`t connect to TMDb')
+
+        console.log(err)
       }
+
+      loader.hide()
     })
   },
 
   search ({ commit, state }) {
-    return new Promise(async (resolve, reject) => {
+    return new Promise(async resolve => {
+      let loader = this._vm.$loading.show()
+
       try {
         let { results } = await search(state.text)
 
@@ -51,8 +59,12 @@ const actions = {
 
         resolve()
       } catch (err) {
-        reject(err)
+        this._vm.$toastr('error', 'Can`t connect to TMDb')
+
+        console.log(err)
       }
+
+      loader.hide()
     })
   },
 

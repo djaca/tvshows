@@ -30,7 +30,7 @@
     <div>
       <button
         class="text-green-500"
-        @click="addShow"
+        @click="add()"
         v-if="!exists(id)"
       >
         <font-awesome-icon
@@ -41,7 +41,7 @@
 
       <button
         class="text-red-500"
-        @click="removeShow()"
+        @click="remove()"
         v-else
       >
         <font-awesome-icon
@@ -65,19 +65,7 @@
     },
 
     methods: {
-      ...mapActions('Shows', ['add', 'remove']),
-
-      addShow () {
-        this.add()
-
-        this.$toastr('info', 'Show added to library')
-      },
-
-      removeShow () {
-        this.remove()
-
-        this.$toastr('info', 'Show removed from library')
-      }
+      ...mapActions('Shows', ['add', 'remove'])
     }
   }
 </script>

@@ -26,10 +26,14 @@ const actions = {
       img: rootState.Show.img,
       created_at: new Date()
     })
+
+    this._vm.$toastr('info', 'Show added to library')
   },
 
   remove ({ commit, rootState }) {
     commit('REMOVE', rootState.Show.id)
+
+    this._vm.$toastr('info', 'Show removed from library')
   }
 }
 
