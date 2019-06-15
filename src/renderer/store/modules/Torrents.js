@@ -18,14 +18,14 @@ const mutations = {
 
 const actions = {
   async add ({ commit, state, dispatch }, payload) {
-    await dispatch('remove', payload)
+    await dispatch('remove', payload.id)
 
     commit('ADD', payload)
   },
 
-  remove ({ commit, state }, payload) {
+  remove ({ commit, state }, id) {
     return new Promise(resolve => {
-      let index = state.items.findIndex(t => t.id === payload.id)
+      let index = state.items.findIndex(t => t.id === id)
 
       if (index !== -1) {
         commit('REMOVE', index)

@@ -86,7 +86,7 @@ const actions = {
   },
 
   cancel ({ state, dispatch }) {
-    dispatch('Torrents/remove', { id: state.id }, { root: true })
+    dispatch('Torrents/remove', state.id, { root: true })
 
     dispatch('clear')
 
