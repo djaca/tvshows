@@ -31,7 +31,7 @@
 
         <div
           class="text-xs"
-          v-text="date"
+          v-text="humanTime(item.air_date)"
         ></div>
       </div>
 
