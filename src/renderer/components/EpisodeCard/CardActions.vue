@@ -1,9 +1,9 @@
 <template>
-  <div class="mt-2 overflow-hidden">
+  <div class="mt-2">
     <button
       v-for="(torrent, type) in torrents(item.episode)"
       :key="type"
-      class="button"
+      class="button mb-2"
       @click="doDownload(torrent.url)"
     >
       {{ type }}
@@ -105,7 +105,3 @@
     }
   }
 </script>
-
-<style scoped>
-
-</style>
