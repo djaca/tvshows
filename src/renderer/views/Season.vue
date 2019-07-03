@@ -21,6 +21,8 @@
         </div>
       </div>
     </div>
+
+    <go-to-top />
   </div>
 </template>
 

@@ -8,6 +8,8 @@
         @click="goTo('season', { id: $route.params.id, season: $event.id })"
       />
     </div>
+
+    <go-to-top />
   </div>
 </template>
 

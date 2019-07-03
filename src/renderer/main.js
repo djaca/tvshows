@@ -10,6 +10,8 @@ if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.config.productionTip = false
 Vue.prototype.humanTime = date => DateTime.fromISO(date).toLocaleString(DateTime.DATE_MED)
 
+Vue.component('go-to-top', require('@/components/GoToTop').default)
+
 /* eslint-disable no-new */
 new Vue({
   components: { App },

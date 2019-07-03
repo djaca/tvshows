@@ -7,6 +7,8 @@
     />
 
     <div v-else>No shows yet</div>
+
+    <go-to-top />
   </div>
 </template>
 

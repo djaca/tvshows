@@ -58,6 +58,8 @@
         </button>
       </div>
     </div>
+
+    <go-to-top />
   </div>
 </template>
 
