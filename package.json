@@ -32,7 +32,7 @@
     "cheerio": "^1.0.0-rc.2",
     "electron-dl": "^1.14.0",
     "lodash": "^4.17.11",
-    "luxon": "^1.16.0",
+    "luxon": "^1.28.1",
     "omit-deep": "^0.3.0",
     "parse-torrent-name": "^0.5.4",
     "request": "^2.88.0",
